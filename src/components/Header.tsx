@@ -12,64 +12,76 @@ export function Header() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[var(--border)]/80 bg-[rgba(7,9,12,0.85)] backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-[var(--border)]/80 bg-[rgba(7,9,12,0.92)] backdrop-blur-xl">
       <div className="mx-auto max-w-[1400px] px-4 md:px-6">
-        <div className="flex items-center justify-between gap-4 py-3">
-          <Link href="/" className="group flex items-center gap-3">
+        <div className="flex items-center justify-between gap-6 py-3">
+          <Link href="/" className="group flex shrink-0 items-center gap-2.5">
             <span className="grid h-9 w-9 place-items-center rounded-lg border border-[var(--accent)]/40 bg-[var(--accent-dim)] font-display text-sm font-bold text-[var(--accent)]">
               £0
             </span>
             <div className="leading-tight">
-              <div className="font-display text-lg font-bold tracking-tight text-white group-hover:text-[var(--accent)]">
+              <div className="font-display text-[17px] font-bold tracking-tight text-white group-hover:text-[var(--accent)]">
                 ZeroSpenders
               </div>
-              <div className="hidden text-[11px] tracking-[0.12em] text-[var(--muted)] sm:block">
+              <div className="hidden text-[10px] tracking-[0.14em] text-[var(--muted)] sm:block">
                 Intelligence for £0 opportunities
               </div>
             </div>
           </Link>
 
-          <div className="flex items-center gap-2">
-            <Link
-              href="/live"
-              className="hidden items-center gap-1.5 rounded-md border border-[var(--accent)]/30 bg-[var(--accent-dim)] px-2.5 py-1.5 text-xs font-bold tracking-wide text-[var(--accent)] sm:inline-flex"
-            >
-              <span className="live-dot" />
-              LIVE
-            </Link>
-            <Link
-              href="/watching"
-              className="hidden rounded-md px-3 py-1.5 text-xs font-semibold text-[var(--info)] transition hover:text-white md:inline"
-            >
-              Watching
-            </Link>
-            <Link
-              href="/creators"
-              className="hidden rounded-md px-3 py-1.5 text-xs font-semibold text-[var(--muted)] transition hover:text-white lg:inline"
-            >
-              Creators
-            </Link>
-            <Link
-              href="/brands"
-              className="hidden rounded-md px-3 py-1.5 text-xs font-semibold text-[var(--muted)] transition hover:text-white lg:inline"
-            >
-              Brands
-            </Link>
-            <Link
-              href="/dashboard"
-              className="hidden rounded-md px-3 py-1.5 text-xs font-semibold text-[var(--muted)] transition hover:text-white sm:inline"
-            >
-              Dashboard
-            </Link>
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <div className="hidden items-center gap-0.5 rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)]/80 p-0.5 sm:flex">
+              <Link
+                href="/live"
+                className="inline-flex items-center gap-1.5 rounded-md bg-[var(--accent-dim)] px-2.5 py-1.5 text-[11px] font-bold tracking-wide text-[var(--accent)]"
+              >
+                <span className="live-dot" />
+                LIVE
+              </Link>
+              <Link
+                href="/watching"
+                className="rounded-md px-2.5 py-1.5 text-[11px] font-semibold text-[var(--info)] transition hover:bg-[var(--surface)] hover:text-white"
+              >
+                Watching
+              </Link>
+              <Link
+                href="/claimed"
+                className="hidden rounded-md px-2.5 py-1.5 text-[11px] font-semibold text-[var(--muted)] transition hover:bg-[var(--surface)] hover:text-white md:inline"
+              >
+                Claimed
+              </Link>
+            </div>
+
+            <div className="hidden items-center gap-0.5 lg:flex">
+              <Link
+                href="/creators"
+                className="rounded-md px-2.5 py-1.5 text-[11px] font-semibold text-[var(--muted)] transition hover:bg-[var(--surface)] hover:text-white"
+              >
+                Creators
+              </Link>
+              <Link
+                href="/brands"
+                className="rounded-md px-2.5 py-1.5 text-[11px] font-semibold text-[var(--muted)] transition hover:bg-[var(--surface)] hover:text-white"
+              >
+                Brands
+              </Link>
+              <Link
+                href="/dashboard"
+                className="rounded-md px-2.5 py-1.5 text-[11px] font-semibold text-[var(--muted)] transition hover:bg-[var(--surface)] hover:text-white"
+              >
+                Dashboard
+              </Link>
+            </div>
+
             <Link
               href="/join"
-              className="rounded-md bg-[var(--accent)] px-3 py-1.5 text-xs font-bold text-[#04140f] transition hover:brightness-110"
+              className="ml-0.5 rounded-md bg-[var(--accent)] px-3 py-1.5 text-[11px] font-bold text-[#04140f] transition hover:brightness-110"
             >
               Join Free
             </Link>
             <button
               type="button"
-              className="grid h-9 w-9 place-items-center rounded-md border border-[var(--border)] text-[var(--muted)] md:hidden"
+              className="grid h-8 w-8 place-items-center rounded-md border border-[var(--border)] text-[var(--muted)] md:hidden"
               aria-label="Menu"
               onClick={() => setOpen((v) => !v)}
             >
@@ -78,13 +90,13 @@ export function Header() {
           </div>
         </div>
 
-        <nav className="hidden border-t border-[var(--border)]/70 py-2 md:block">
-          <div className="flex flex-wrap items-center gap-1">
+        <nav className="hidden border-t border-[var(--border)]/60 md:block">
+          <div className="flex items-center gap-0.5 overflow-x-auto py-1.5 scrollbar-thin">
             {CATEGORY_LINKS.map((c) => (
               <Link
                 key={c.href}
                 href={c.href}
-                className="rounded-md px-2.5 py-1.5 text-xs font-semibold tracking-wide text-[var(--muted)] transition hover:bg-[var(--surface)] hover:text-white"
+                className="shrink-0 rounded-md px-3 py-1.5 text-[11px] font-semibold tracking-[0.06em] text-[var(--muted)] transition hover:bg-[var(--surface)] hover:text-white"
               >
                 {c.label}
               </Link>
