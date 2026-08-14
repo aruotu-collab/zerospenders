@@ -45,6 +45,12 @@ export function Header() {
 
         <div className="flex items-center gap-2">
           <Link
+            href="/watching"
+            className="hidden rounded-md px-3 py-1.5 text-xs font-semibold text-[var(--info)] transition hover:text-white md:inline"
+          >
+            Watching
+          </Link>
+          <Link
             href="/creators"
             className="hidden rounded-md px-3 py-1.5 text-xs font-semibold text-[var(--muted)] transition hover:text-white md:inline"
           >
@@ -55,6 +61,12 @@ export function Header() {
             className="hidden rounded-md px-3 py-1.5 text-xs font-semibold text-[var(--muted)] transition hover:text-white md:inline"
           >
             Brands
+          </Link>
+          <Link
+            href="/dashboard"
+            className="hidden rounded-md px-3 py-1.5 text-xs font-semibold text-[var(--muted)] transition hover:text-white sm:inline"
+          >
+            Dashboard
           </Link>
           <Link
             href="/join"
@@ -86,6 +98,12 @@ export function Header() {
                 {c.label}
               </Link>
             ))}
+            <Link href="/watching" onClick={() => setOpen(false)} className="rounded-md border border-[var(--info)]/30 bg-[rgba(61,184,255,0.08)] px-3 py-2 text-xs font-semibold text-[var(--info)]">
+              Watching
+            </Link>
+            <Link href="/claimed" onClick={() => setOpen(false)} className="rounded-md border border-[var(--border)] px-3 py-2 text-xs font-semibold">
+              Claimed
+            </Link>
             <Link href="/creators" onClick={() => setOpen(false)} className="rounded-md border border-[var(--border)] px-3 py-2 text-xs font-semibold">
               Creators
             </Link>

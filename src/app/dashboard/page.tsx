@@ -74,25 +74,35 @@ export default async function DashboardPage() {
 
       {(claimed.length > 0 || watching.length > 0) && (
         <section className="mt-8 space-y-6">
-          {claimed.length > 0 && (
+          {watching.length > 0 && (
             <div>
-              <h2 className="font-display mb-3 text-sm font-bold tracking-[0.14em] text-[var(--accent)]">
-                CLAIMED ({claimed.length})
-              </h2>
+              <div className="mb-3 flex items-center justify-between">
+                <h2 className="font-display text-sm font-bold tracking-[0.14em] text-[var(--info)]">
+                  WATCHING ({watching.length})
+                </h2>
+                <Link href="/watching" className="text-xs font-semibold text-[var(--info)]">
+                  Open watch board →
+                </Link>
+              </div>
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {claimed.map((signal) => (
+                {watching.map((signal) => (
                   <SignalCard key={signal.id} signal={signal} compact />
                 ))}
               </div>
             </div>
           )}
-          {watching.length > 0 && (
+          {claimed.length > 0 && (
             <div>
-              <h2 className="font-display mb-3 text-sm font-bold tracking-[0.14em] text-[var(--info)]">
-                WATCHING ({watching.length})
-              </h2>
+              <div className="mb-3 flex items-center justify-between">
+                <h2 className="font-display text-sm font-bold tracking-[0.14em] text-[var(--accent)]">
+                  CLAIMED ({claimed.length})
+                </h2>
+                <Link href="/claimed" className="text-xs font-semibold text-[var(--accent)]">
+                  Open claimed board →
+                </Link>
+              </div>
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {watching.map((signal) => (
+                {claimed.map((signal) => (
                   <SignalCard key={signal.id} signal={signal} compact />
                 ))}
               </div>

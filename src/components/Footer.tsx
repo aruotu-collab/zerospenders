@@ -15,9 +15,10 @@ export function Footer() {
           <div className="text-xs font-bold tracking-[0.14em] text-[var(--faint)]">EXPLORE</div>
           <ul className="mt-3 space-y-2 text-sm text-[var(--muted)]">
             <li><Link href="/live" className="hover:text-white">Live board</Link></li>
+            <li><Link href="/watching" className="hover:text-white">Watching</Link></li>
+            <li><Link href="/claimed" className="hover:text-white">Claimed</Link></li>
             <li><Link href="/near-me" className="hover:text-white">Near me</Link></li>
             <li><Link href="/today" className="hover:text-white">Free today</Link></li>
-            <li><Link href="/get-free" className="hover:text-white">Get free</Link></li>
           </ul>
         </div>
         <div>

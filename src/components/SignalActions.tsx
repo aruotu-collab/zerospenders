@@ -105,7 +105,7 @@ export function SignalActions({
               (r) => setWatching(!!r.watching),
               watching
                 ? "Stopped watching this signal."
-                : `Watching “${title}”. Updates will appear on your board.`
+                : `Watching “${title}”.`
             )
           }
           className={`rounded-lg border px-5 py-3 text-sm font-semibold transition disabled:opacity-60 ${
@@ -150,11 +150,20 @@ export function SignalActions({
         </p>
       )}
 
-      {authed && (claimed || watching) && (
+      {authed && watching && (
         <p className="text-sm text-[var(--muted)]">
-          Saved to your account.{" "}
-          <Link href="/dashboard" className="font-semibold text-[var(--accent)]">
-            Open dashboard
+          On your watch board.{" "}
+          <Link href="/watching" className="font-semibold text-[var(--info)]">
+            Open Watching →
+          </Link>
+        </p>
+      )}
+
+      {authed && claimed && !watching && (
+        <p className="text-sm text-[var(--muted)]">
+          Saved to your claims.{" "}
+          <Link href="/claimed" className="font-semibold text-[var(--accent)]">
+            Open Claimed →
           </Link>
         </p>
       )}
@@ -165,6 +174,22 @@ export function SignalActions({
           className="rounded-lg border border-[var(--accent)]/30 bg-[var(--accent-dim)] px-4 py-3 text-sm text-[var(--accent)]"
         >
           {toast}
+          {toast.startsWith("Watching") && (
+            <>
+              {" "}
+              <Link href="/watching" className="font-bold underline">
+                View watch board
+              </Link>
+            </>
+          )}
+          {toast.includes("Claimed") && (
+            <>
+              {" "}
+              <Link href="/claimed" className="font-bold underline">
+                View claimed board
+              </Link>
+            </>
+          )}
           {toast.includes("Join free") && (
             <>
               {" "}
