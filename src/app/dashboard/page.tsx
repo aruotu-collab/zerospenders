@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SignalCard } from "@/components/SignalCard";
+import { DashboardActivity } from "@/components/DashboardActivity";
 import { formatGBP, SIGNALS, nearYouSignals } from "@/lib/data";
 
 export default function DashboardPage() {
@@ -41,6 +42,8 @@ export default function DashboardPage() {
           </div>
         ))}
       </div>
+
+      <DashboardActivity />
 
       <section className="mt-8">
         <div className="mb-4 flex items-center justify-between">

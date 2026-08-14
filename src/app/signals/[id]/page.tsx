@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { FreeScoreBadge } from "@/components/FreeScoreBadge";
+import { SignalActions } from "@/components/SignalActions";
 import { formatGBP, getSignal, scoreLabel, SIGNALS } from "@/lib/data";
 
 export function generateStaticParams() {
@@ -76,19 +77,11 @@ export default async function SignalPage({
             ))}
           </div>
 
-          <div className="mt-8 flex flex-wrap gap-3">
-            <button className="rounded-lg bg-[var(--accent)] px-5 py-3 text-sm font-bold text-[#04140f]">
-              Claim FREE →
-            </button>
-            <button className="rounded-lg border border-[var(--border-strong)] px-5 py-3 text-sm font-semibold text-white">
-              Watch this signal
-            </button>
-            {signal.cancelReminder && (
-              <button className="rounded-lg border border-[var(--warn)]/40 bg-[rgba(255,176,32,0.08)] px-5 py-3 text-sm font-semibold text-[var(--warn)]">
-                Set cancel reminder
-              </button>
-            )}
-          </div>
+          <SignalActions
+            signalId={signal.id}
+            title={signal.title}
+            cancelReminder={signal.cancelReminder}
+          />
         </section>
 
         <aside className="space-y-4">
