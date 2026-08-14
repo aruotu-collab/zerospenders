@@ -1,10 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { SignalCard } from "@/components/SignalCard";
 import { NearYouRadar } from "@/components/NearYouRadar";
-import { SIGNALS, nearYouSignals } from "@/lib/data";
+import type { FreeSignal } from "@/lib/types";
 
 export default function NearMeClient() {
   const searchParams = useSearchParams();
@@ -15,7 +15,18 @@ export default function NearMeClient() {
         ? "feed"
         : "radar";
   const [view, setView] = useState<"radar" | "map" | "feed">(initial);
-  const near = useMemo(() => nearYouSignals(), []);
+  const [near, setNear] = useState<FreeSignal[]>([]);
+  const [extra, setExtra] = useState<FreeSignal[]>([]);
+
+  useEffect(() => {
+    fetch("/api/signals?near=1")
+      .then((r) => r.json())
+      .then((data) => {
+        setNear(data.near ?? []);
+        setExtra(data.extra ?? []);
+      })
+      .catch(() => undefined);
+  }, []);
 
   return (
     <div className="mx-auto max-w-[1400px] px-4 py-8 md:px-6">
@@ -81,14 +92,9 @@ export default function NearMeClient() {
 
       {view === "feed" && (
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {near.map((signal) => (
+          {[...near, ...extra.slice(0, 3)].map((signal) => (
             <SignalCard key={signal.id} signal={signal} />
           ))}
-          {SIGNALS.filter((s) => s.distanceMiles === undefined)
-            .slice(0, 3)
-            .map((signal) => (
-              <SignalCard key={signal.id} signal={signal} />
-            ))}
         </div>
       )}
     </div>

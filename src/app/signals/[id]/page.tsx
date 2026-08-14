@@ -2,10 +2,18 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { FreeScoreBadge } from "@/components/FreeScoreBadge";
 import { SignalActions } from "@/components/SignalActions";
-import { formatGBP, getSignal, scoreLabel, SIGNALS } from "@/lib/data";
+import { formatGBP, scoreLabel } from "@/lib/data";
+import { getSignalBySlug, listSignals } from "@/lib/queries";
 
-export function generateStaticParams() {
-  return SIGNALS.map((s) => ({ id: s.id }));
+export const dynamic = "force-dynamic";
+
+export async function generateStaticParams() {
+  try {
+    const signals = await listSignals();
+    return signals.map((s) => ({ id: s.id }));
+  } catch {
+    return [];
+  }
 }
 
 export default async function SignalPage({
@@ -14,7 +22,7 @@ export default async function SignalPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const signal = getSignal(id);
+  const signal = await getSignalBySlug(id);
   if (!signal) notFound();
 
   const label = scoreLabel(signal.freeScore);

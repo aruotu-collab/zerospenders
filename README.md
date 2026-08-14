@@ -4,23 +4,32 @@
 
 Live intelligence board for £0 opportunities — free samples, days out, food, trials, courses, creator drops and brand campaigns.
 
+## Stack
+
+- Next.js (App Router) + TypeScript + Tailwind
+- Neon Postgres + Prisma
+- Auth.js (email/password, Member / Creator / Brand roles)
+
 ## Run locally
 
 ```bash
 npm install
+cp .env.example .env   # or use existing .env.local
+npm run db:setup
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:3001](http://localhost:3001) (or 3000).
 
-## What's included
+## Scripts
 
-- LIVE intelligence homepage (pulse metrics, ticker, trending / just dropped / ending soon)
-- Category boards: Get / Go / Eat / Learn / Play / Try / Kids / Online / Today
-- Near Me radar + map + feed views
-- Signal detail pages with FREE SCORE and community intelligence
-- Creator drops marketplace
-- Brand campaign launcher
-- Member join flow + personalised dashboard (Watch FREE, savings, hunter level)
+- `npm run db:push` — sync Prisma schema to Neon
+- `npm run db:seed` — seed signals, drops, pulse metrics
+- `npm run db:setup` — push + seed
 
-Built with Next.js, TypeScript and Tailwind CSS.
+## What’s included
+
+- LIVE intelligence homepage backed by Postgres
+- Category boards, signal detail, near-me, creators, brands
+- Auth + dashboard with real claims / watches / cancel reminders
+- `/api/signals` and Auth.js `/api/auth/*`

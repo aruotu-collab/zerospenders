@@ -3,10 +3,17 @@ import { SignalCard } from "@/components/SignalCard";
 import { PulseBar } from "@/components/PulseBar";
 import { LiveTicker } from "@/components/LiveTicker";
 import { ActivityFeed } from "@/components/ActivityFeed";
-import { ACTIVITY, PULSE, SIGNALS } from "@/lib/data";
+import { getPulse, listActivity, listSignals } from "@/lib/queries";
 
-export default function LivePage() {
-  const sorted = [...SIGNALS].sort((a, b) => a.verifiedMinsAgo - b.verifiedMinsAgo);
+export const dynamic = "force-dynamic";
+
+export default async function LivePage() {
+  const [signals, pulse, activity] = await Promise.all([
+    listSignals(),
+    getPulse(),
+    listActivity(),
+  ]);
+  const sorted = [...signals].sort((a, b) => a.verifiedMinsAgo - b.verifiedMinsAgo);
 
   return (
     <div className="mx-auto max-w-[1400px] px-4 py-8 md:px-6">
@@ -24,7 +31,7 @@ export default function LivePage() {
       </div>
 
       <div className="mb-4">
-        <PulseBar metrics={PULSE} />
+        <PulseBar metrics={pulse} />
       </div>
       <div className="mb-8">
         <LiveTicker />
@@ -37,7 +44,7 @@ export default function LivePage() {
           ))}
         </div>
         <Suspense fallback={null}>
-          <ActivityFeed items={ACTIVITY} />
+          <ActivityFeed items={activity} />
         </Suspense>
       </div>
     </div>

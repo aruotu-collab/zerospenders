@@ -5,23 +5,15 @@ import { LiveTicker } from "@/components/LiveTicker";
 import { NearYouRadar } from "@/components/NearYouRadar";
 import { PulseBar } from "@/components/PulseBar";
 import { SignalCard } from "@/components/SignalCard";
-import {
-  ACTIVITY,
-  CITY_HEAT,
-  CREATOR_DROPS,
-  PULSE,
-  endingSoonSignals,
-  justDroppedSignals,
-  nearYouSignals,
-  trendingSignals,
-} from "@/lib/data";
 import { formatGBP } from "@/lib/data";
+import { getBoardBundles } from "@/lib/queries";
+import type { FreeSignal } from "@/lib/types";
 
-export default function HomePage() {
-  const trending = trendingSignals();
-  const dropped = justDroppedSignals();
-  const ending = endingSoonSignals();
-  const near = nearYouSignals();
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const { trending, dropped, ending, near, pulse, activity, drops, cityHeat, ticker } =
+    await getBoardBundles();
 
   return (
     <div className="mx-auto max-w-[1400px] px-4 py-6 md:px-6 md:py-8">
@@ -82,10 +74,10 @@ export default function HomePage() {
       </section>
 
       <div className="mb-4">
-        <PulseBar metrics={PULSE} />
+        <PulseBar metrics={pulse} />
       </div>
       <div className="mb-8">
-        <LiveTicker />
+        <LiveTicker items={ticker} />
       </div>
 
       <section className="fade-up fade-up-delay-2 mb-8 grid gap-4 lg:grid-cols-3">
@@ -96,11 +88,11 @@ export default function HomePage() {
 
       <section className="mb-8 grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
         <NearYouRadar signals={near} />
-        <ActivityFeed items={ACTIVITY} />
+        <ActivityFeed items={activity} />
       </section>
 
       <section className="mb-8 grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
-        <HeatMap cities={CITY_HEAT} />
+        <HeatMap cities={cityHeat} />
         <div className="surface rounded-2xl p-4 md:p-5">
           <div className="mb-4 flex items-center justify-between">
             <div>
@@ -116,7 +108,7 @@ export default function HomePage() {
             </Link>
           </div>
           <div className="space-y-3">
-            {CREATOR_DROPS.map((drop) => (
+            {drops.map((drop) => (
               <Link
                 key={drop.id}
                 href="/creators"
@@ -189,7 +181,7 @@ function Column({
 }: {
   title: string;
   accent: string;
-  signals: ReturnType<typeof trendingSignals>;
+  signals: FreeSignal[];
 }) {
   return (
     <div className="space-y-3">

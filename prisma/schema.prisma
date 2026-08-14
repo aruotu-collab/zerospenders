@@ -1,0 +1,266 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  MEMBER
+  CREATOR
+  BRAND
+  ADMIN
+}
+
+enum SignalCategory {
+  GET
+  GO
+  EAT
+  LEARN
+  PLAY
+  TRY
+  KIDS
+  ONLINE
+}
+
+enum VerificationLevel {
+  VERIFIED
+  COMMUNITY
+  EXCLUSIVE
+}
+
+enum SignalStatus {
+  LIVE
+  ENDING
+  NEW
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  passwordHash  String?
+  role          Role      @default(MEMBER)
+  postcode      String?
+  radiusMiles   Int       @default(10)
+  interests     String[]  @default([])
+  savedGBP      Float     @default(0)
+  hunterLevel   String    @default("Freebie Rookie")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts      Account[]
+  sessions      Session[]
+  claims        Claim[]
+  watches       Watch[]
+  reminders     CancelReminder[]
+  creatorProfile CreatorProfile?
+  brandProfile   BrandProfile?
+  dropApplications DropApplication[]
+  activities    ActivityEvent[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Signal {
+  id             String            @id @default(cuid())
+  slug           String            @unique
+  title          String
+  summary        String
+  category       SignalCategory
+  subcategory    String
+  location       String
+  city           String
+  distanceMiles  Float?
+  freeScore      Int
+  normalValue    Float
+  claimsCount    Int               @default(0)
+  watchingCount  Int               @default(0)
+  remaining      Int?
+  successRate    Int               @default(90)
+  verifiedAt     DateTime          @default(now())
+  requiresCard   Boolean           @default(false)
+  cancelReminder Boolean           @default(false)
+  verification   VerificationLevel @default(COMMUNITY)
+  status         SignalStatus      @default(LIVE)
+  endsAt         DateTime?
+  droppedAt      DateTime?
+  activityDelta  Int?
+  workedFor      Int               @default(0)
+  didntWork      Int               @default(0)
+  tags           String[]          @default([])
+  sponsored      Boolean           @default(false)
+  claimUrl       String?
+  active         Boolean           @default(true)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  claims    Claim[]
+  watches   Watch[]
+  reminders CancelReminder[]
+  updates   SignalUpdate[]
+}
+
+model SignalUpdate {
+  id        String   @id @default(cuid())
+  signalId  String
+  text      String
+  createdAt DateTime @default(now())
+  signal    Signal   @relation(fields: [signalId], references: [id], onDelete: Cascade)
+
+  @@index([signalId, createdAt])
+}
+
+model Claim {
+  id        String   @id @default(cuid())
+  userId    String
+  signalId  String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  signal    Signal   @relation(fields: [signalId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, signalId])
+  @@index([userId])
+  @@index([signalId])
+}
+
+model Watch {
+  id        String   @id @default(cuid())
+  userId    String
+  signalId  String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  signal    Signal   @relation(fields: [signalId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, signalId])
+  @@index([userId])
+}
+
+model CancelReminder {
+  id        String   @id @default(cuid())
+  userId    String
+  signalId  String
+  remindAt  DateTime?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  signal    Signal   @relation(fields: [signalId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, signalId])
+}
+
+model CreatorProfile {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  displayName    String?
+  platforms      String[] @default([])
+  followerCount  Int      @default(0)
+  creatorScore   Int      @default(50)
+  categories     String[] @default([])
+  bio            String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model BrandProfile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  company   String
+  website   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  drops     CreatorDrop[]
+}
+
+model CreatorDrop {
+  id            String   @id @default(cuid())
+  brandId       String?
+  slug          String   @unique
+  title         String
+  brandName     String
+  retailValue   Float
+  available     Int
+  appliedCount  Int      @default(0)
+  selectedCount Int      @default(0)
+  closesAt      DateTime
+  missionType   String
+  category      String
+  requirements  String[] @default([])
+  active        Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  brand         BrandProfile? @relation(fields: [brandId], references: [id])
+  applications  DropApplication[]
+}
+
+model DropApplication {
+  id        String   @id @default(cuid())
+  dropId    String
+  userId    String
+  status    String   @default("PENDING")
+  createdAt DateTime @default(now())
+  drop      CreatorDrop @relation(fields: [dropId], references: [id], onDelete: Cascade)
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([dropId, userId])
+}
+
+model ActivityEvent {
+  id        String   @id @default(cuid())
+  text      String
+  userId    String?
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+}
+
+model PlatformMetric {
+  id             String   @id @default("global")
+  liveFreebies   Int      @default(0)
+  valueAvailable Float    @default(0)
+  claimsToday    Int      @default(0)
+  newToday       Int      @default(0)
+  endingSoon     Int      @default(0)
+  verifiedPct    Int      @default(90)
+  peopleWatching Int      @default(0)
+  updatedAt      DateTime @updatedAt
+}

@@ -1,7 +1,12 @@
 import Link from "next/link";
-import { CREATOR_DROPS, formatGBP } from "@/lib/data";
+import { formatGBP } from "@/lib/data";
+import { listCreatorDrops } from "@/lib/queries";
 
-export default function CreatorsPage() {
+export const dynamic = "force-dynamic";
+
+export default async function CreatorsPage() {
+  const drops = await listCreatorDrops();
+
   return (
     <div className="mx-auto max-w-[1200px] px-4 py-8 md:px-6">
       <div className="mb-8 max-w-3xl">
@@ -48,7 +53,7 @@ export default function CreatorsPage() {
         LIVE CREATOR DROPS
       </h2>
       <div className="grid gap-4 lg:grid-cols-3">
-        {CREATOR_DROPS.map((drop) => (
+        {drops.map((drop) => (
           <article key={drop.id} className="surface rounded-2xl p-5">
             <div className="text-[11px] font-semibold tracking-wide text-[var(--warn)]">
               🔥 {drop.missionType}
@@ -77,11 +82,15 @@ export default function CreatorsPage() {
               ))}
             </ul>
             <p className="mt-3 text-xs text-[var(--alert)]">
-              Applications close in {drop.closesInHours}h · {drop.available - drop.selected} places left
+              Applications close in {Math.round(drop.closesInHours)}h · {drop.available - drop.selected}{" "}
+              places left
             </p>
-            <button className="mt-4 w-full rounded-lg bg-white py-2.5 text-sm font-bold text-black">
+            <Link
+              href="/join"
+              className="mt-4 block w-full rounded-lg bg-white py-2.5 text-center text-sm font-bold text-black"
+            >
               Apply for free product
-            </button>
+            </Link>
             <p className="mt-3 text-[11px] leading-relaxed text-[var(--faint)]">
               Genuine experiences only. Disclosure required. Not paid for positive reviews.
             </p>
