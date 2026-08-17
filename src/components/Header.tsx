@@ -3,17 +3,21 @@
 import Link from "next/link";
 import { useState } from "react";
 import { CATEGORIES } from "@/lib/data";
+import { CountrySelect } from "@/components/CountrySelect";
+import { countryLabel, type CountryCode } from "@/lib/countries";
 
 const CATEGORY_LINKS = CATEGORIES.filter((c) =>
   ["get", "go", "eat", "learn", "play", "try", "kids", "online", "near", "today"].includes(c.slug)
 );
 
-export function Header() {
+export function Header({ initialCountry }: { initialCountry?: CountryCode }) {
   const [open, setOpen] = useState(false);
+  const countryName = countryLabel(initialCountry ?? "GB");
 
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--border)]/80 bg-[rgba(7,9,12,0.92)] backdrop-blur-xl">
       <div className="mx-auto max-w-[1400px] px-4 md:px-6">
+        {/* Row 1 — logo + utilities */}
         <div className="flex items-center justify-between gap-6 py-3">
           <Link href="/" className="group flex shrink-0 items-center gap-2.5">
             <span className="grid h-9 w-9 place-items-center rounded-lg border border-[var(--accent)]/40 bg-[var(--accent-dim)] font-display text-sm font-bold text-[var(--accent)]">
@@ -90,6 +94,16 @@ export function Header() {
           </div>
         </div>
 
+        {/* Row 2 — country (between logo and FREE menus) */}
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--border)]/60 py-2.5">
+          <CountrySelect initialCountry={initialCountry} />
+          <p className="text-[11px] text-[var(--muted)]">
+            FREE menus below update for{" "}
+            <span className="font-semibold text-[var(--info)]">{countryName}</span>
+          </p>
+        </div>
+
+        {/* Row 3 — category menus */}
         <nav className="hidden border-t border-[var(--border)]/60 md:block">
           <div className="flex items-center gap-0.5 overflow-x-auto py-1.5 scrollbar-thin">
             {CATEGORY_LINKS.map((c) => (

@@ -1,4 +1,6 @@
 import { CategoryBrowse } from "@/components/CategoryBrowse";
+import { countryLabel } from "@/lib/countries";
+import { getSelectedCountry } from "@/lib/country-server";
 import { listSignals } from "@/lib/queries";
 import type { SignalCategory } from "@/lib/types";
 
@@ -53,7 +55,15 @@ const pages: Record<
 export function makeCategoryPage(slug: keyof typeof pages) {
   const meta = pages[slug];
   return async function CategoryPage() {
-    const signals = await listSignals({ category: meta.category });
-    return <CategoryBrowse title={meta.title} blurb={meta.blurb} signals={signals} />;
+    const country = await getSelectedCountry();
+    const signals = await listSignals({ category: meta.category, country });
+    return (
+      <CategoryBrowse
+        title={meta.title}
+        blurb={meta.blurb}
+        signals={signals}
+        countryName={countryLabel(country)}
+      />
+    );
   };
 }

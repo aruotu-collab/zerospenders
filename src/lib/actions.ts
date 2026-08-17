@@ -247,6 +247,28 @@ export async function getMySignalState(signalSlug: string) {
   };
 }
 
+export async function recordSignalShare(signalSlug: string) {
+  const userId = await requireUserId();
+  if (!userId) return { ok: false as const, error: "auth_required" };
+
+  const signal = await prisma.signal.findUnique({ where: { slug: signalSlug } });
+  if (!signal) return { ok: false as const, error: "not_found" };
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { name: true },
+  });
+
+  await prisma.activityEvent.create({
+    data: {
+      text: `${user?.name?.split(" ")[0] ?? "A hunter"} shared ${signal.title} with a friend`,
+      userId,
+    },
+  });
+
+  return { ok: true as const };
+}
+
 export async function getDashboardData() {
   const session = await auth();
   if (!session?.user?.id) return null;

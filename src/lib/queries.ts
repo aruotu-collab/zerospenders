@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db";
 import { mapActivity, mapDrop, mapPulse, mapSignal } from "@/lib/mappers";
 import type { SignalCategory } from "@/lib/types";
 import { CITY_HEAT, TICKER_ITEMS } from "@/lib/data";
+import type { CountryCode } from "@/lib/countries";
 
 const categoryToDb = {
   get: "GET",
@@ -30,12 +31,19 @@ export async function getPulse() {
   return mapPulse(metric);
 }
 
-export async function listSignals(opts?: { category?: SignalCategory; nearOnly?: boolean }) {
+export async function listSignals(opts?: {
+  category?: SignalCategory;
+  nearOnly?: boolean;
+  country?: CountryCode;
+}) {
   const signals = await prisma.signal.findMany({
     where: {
       active: true,
       ...(opts?.category ? { category: categoryToDb[opts.category] } : {}),
       ...(opts?.nearOnly ? { distanceMiles: { not: null } } : {}),
+      ...(opts?.country
+        ? { OR: [{ country: opts.country }, { country: "GLOBAL" }] }
+        : {}),
     },
     include: {
       updates: { orderBy: { createdAt: "desc" }, take: 6 },
@@ -71,9 +79,9 @@ export async function listActivity(limit = 12) {
   return events.map(mapActivity);
 }
 
-export async function getBoardBundles() {
+export async function getBoardBundles(country: CountryCode) {
   const [all, pulse, activity, drops] = await Promise.all([
-    listSignals(),
+    listSignals({ country }),
     getPulse(),
     listActivity(),
     listCreatorDrops(),
@@ -105,6 +113,7 @@ export async function getBoardBundles() {
     drops,
     cityHeat: CITY_HEAT,
     ticker: TICKER_ITEMS,
+    country,
   };
 }
 

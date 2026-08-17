@@ -6,10 +6,12 @@ export function CategoryBrowse({
   title,
   blurb,
   signals,
+  countryName,
 }: {
   title: string;
   blurb: string;
   signals: FreeSignal[];
+  countryName?: string;
 }) {
   return (
     <div className="mx-auto max-w-[1400px] px-4 py-8 md:px-6">
@@ -20,6 +22,11 @@ export function CategoryBrowse({
             {title}
           </h1>
           <p className="mt-2 max-w-xl text-[var(--muted)]">{blurb}</p>
+          {countryName && (
+            <p className="mt-2 text-xs font-semibold tracking-wide text-[var(--info)]">
+              Showing signals for {countryName}
+            </p>
+          )}
         </div>
         <Link
           href="/live"
@@ -32,7 +39,9 @@ export function CategoryBrowse({
 
       {signals.length === 0 ? (
         <div className="surface rounded-2xl p-10 text-center text-[var(--muted)]">
-          No live signals in this category yet. Check back soon.
+          {countryName
+            ? `No live signals for ${countryName} in this category yet. Switch country above or check back soon.`
+            : "No live signals in this category yet. Check back soon."}
         </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">

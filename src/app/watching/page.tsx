@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { auth } from "@/auth";
-import { SignalCard } from "@/components/SignalCard";
+import { BoardSignalItem } from "@/components/BoardSignalItem";
 import { getDashboardData } from "@/lib/actions";
 
 export const dynamic = "force-dynamic";
@@ -15,7 +15,7 @@ export default async function WatchingBoardPage() {
         <p className="text-xs font-semibold tracking-[0.2em] text-[var(--info)]">WATCH BOARD</p>
         <h1 className="font-display mt-2 text-4xl font-bold text-white">Your watchlist</h1>
         <p className="mt-3 text-[var(--muted)]">
-          Sign in to see every FREE signal you&apos;re watching in one place.
+          Sign in to see every FREE signal you&apos;re watching — and pass great finds to friends.
         </p>
         <Link
           href="/join"
@@ -43,7 +43,7 @@ export default async function WatchingBoardPage() {
           <p className="mt-2 max-w-xl text-[var(--muted)]">
             {watching.length === 0
               ? `${user.name?.split(" ")[0] ?? "Hunter"}, you’re not watching anything yet. Open a signal and tap Watch.`
-              : `${watching.length} signal${watching.length === 1 ? "" : "s"} on your board — we’ll keep scoring and verifying these for you.`}
+              : `${watching.length} signal${watching.length === 1 ? "" : "s"} on your board — share any with a friend before they end.`}
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -75,12 +75,12 @@ export default async function WatchingBoardPage() {
       ) : (
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {watching.map((signal) => (
-            <div key={signal.id} className="relative">
-              <div className="absolute right-3 top-3 z-10 rounded-full border border-[var(--info)]/40 bg-[rgba(61,184,255,0.12)] px-2 py-0.5 text-[10px] font-bold tracking-wide text-[var(--info)]">
-                ● WATCHING
-              </div>
-              <SignalCard signal={signal} />
-            </div>
+            <BoardSignalItem
+              key={signal.id}
+              signal={signal}
+              badge="● WATCHING"
+              badgeClassName="border-[var(--info)]/40 bg-[rgba(61,184,255,0.12)] text-[var(--info)]"
+            />
           ))}
         </div>
       )}

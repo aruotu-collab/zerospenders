@@ -108,6 +108,7 @@ model Signal {
   subcategory    String
   location       String
   city           String
+  country        String            @default("GB")
   distanceMiles  Float?
   freeScore      Int
   normalValue    Float

@@ -88,6 +88,7 @@ export default async function SignalPage({
           <SignalActions
             signalId={signal.id}
             title={signal.title}
+            normalValue={signal.normalValue}
             cancelReminder={signal.cancelReminder}
           />
         </section>

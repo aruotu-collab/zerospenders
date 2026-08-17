@@ -8,14 +8,17 @@ import {
   toggleReminder,
   toggleWatch,
 } from "@/lib/actions";
+import { ShareDeal } from "@/components/ShareDeal";
 
 export function SignalActions({
   signalId,
   title,
+  normalValue,
   cancelReminder,
 }: {
   signalId: string;
   title: string;
+  normalValue: number;
   cancelReminder: boolean;
 }) {
   const [claimed, setClaimed] = useState(false);
@@ -139,6 +142,13 @@ export function SignalActions({
             {reminded ? "✓ Reminder on" : "Set cancel reminder"}
           </button>
         )}
+
+        <ShareDeal
+          signalId={signalId}
+          title={title}
+          normalValue={normalValue}
+          authed={authed}
+        />
       </div>
 
       {!authed && (
@@ -146,7 +156,7 @@ export function SignalActions({
           <Link href="/join" className="font-semibold text-[var(--accent)]">
             Join free
           </Link>{" "}
-          to save claims and watches across devices.
+          to save claims, watches and shared finds across devices.
         </p>
       )}
 

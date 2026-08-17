@@ -2,6 +2,7 @@ import Link from "next/link";
 import { SignalCard } from "@/components/SignalCard";
 import { formatGBP } from "@/lib/data";
 import { getDashboardData } from "@/lib/actions";
+import { getSelectedCountry } from "@/lib/country-server";
 import { listSignals } from "@/lib/queries";
 import { auth } from "@/auth";
 
@@ -10,8 +11,9 @@ export const dynamic = "force-dynamic";
 export default async function DashboardPage() {
   const session = await auth();
   const data = await getDashboardData();
-  const near = (await listSignals({ nearOnly: true })).slice(0, 3);
-  const ending = (await listSignals()).filter((s) => s.status === "ending").slice(0, 2);
+  const country = await getSelectedCountry();
+  const near = (await listSignals({ nearOnly: true, country })).slice(0, 3);
+  const ending = (await listSignals({ country })).filter((s) => s.status === "ending").slice(0, 2);
 
   if (!session?.user || !data) {
     return (

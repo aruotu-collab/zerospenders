@@ -19,6 +19,7 @@ export interface FreeSignal {
   category: SignalCategory;
   subcategory: string;
   location: string;
+  country: string;
   distanceMiles?: number;
   freeScore: number;
   normalValue: number;

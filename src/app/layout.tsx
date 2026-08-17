@@ -3,6 +3,7 @@ import { Space_Grotesk, IBM_Plex_Sans, JetBrains_Mono } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { getSelectedCountry } from "@/lib/country-server";
 import "./globals.css";
 
 const display = Space_Grotesk({
@@ -67,14 +68,16 @@ export const metadata: Metadata = {
 
 const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const country = await getSelectedCountry();
+
   return (
     <html
       lang="en-GB"
       className={`${display.variable} ${body.variable} ${mono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
-        <Header />
+        <Header initialCountry={country} />
         <main className="flex-1">{children}</main>
         <Footer />
         {gaId ? <GoogleAnalytics gaId={gaId} /> : null}

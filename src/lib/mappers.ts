@@ -60,6 +60,7 @@ export function mapSignal(
     category: categoryMap[signal.category],
     subcategory: signal.subcategory,
     location: signal.location,
+    country: signal.country || "GB",
     distanceMiles: signal.distanceMiles ?? undefined,
     freeScore: signal.freeScore,
     normalValue: signal.normalValue,

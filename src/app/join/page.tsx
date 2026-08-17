@@ -40,7 +40,7 @@ export default function JoinPage() {
         {mode === "register" ? "Start hunting £0 opportunities" : "Welcome back"}
       </h1>
       <p className="mt-3 text-[var(--muted)]">
-        Free forever for core access. Accounts sync claims, watches and cancel reminders.
+        Free forever for core access. Accounts sync claims, watches, cancel reminders — and let you share FREE finds with friends.
       </p>
 
       <div className="mt-6 flex gap-2 rounded-xl border border-[var(--border)] p-1">

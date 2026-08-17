@@ -49,6 +49,7 @@ async function main() {
         subcategory: signal.subcategory,
         location: signal.location,
         city: signal.city,
+        country: signal.country || "GB",
         distanceMiles: signal.distanceMiles,
         freeScore: signal.freeScore,
         normalValue: signal.normalValue,

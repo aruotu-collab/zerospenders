@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { auth } from "@/auth";
-import { SignalCard } from "@/components/SignalCard";
+import { BoardSignalItem } from "@/components/BoardSignalItem";
 import { getDashboardData } from "@/lib/actions";
 
 export const dynamic = "force-dynamic";
@@ -15,7 +15,7 @@ export default async function ClaimedBoardPage() {
         <p className="text-xs font-semibold tracking-[0.2em] text-[var(--accent)]">CLAIMED BOARD</p>
         <h1 className="font-display mt-2 text-4xl font-bold text-white">Your claims</h1>
         <p className="mt-3 text-[var(--muted)]">
-          Sign in to track every FREE opportunity you&apos;ve claimed.
+          Sign in to track every FREE opportunity you&apos;ve claimed — and share finds with friends.
         </p>
         <Link
           href="/join"
@@ -38,7 +38,7 @@ export default async function ClaimedBoardPage() {
           <p className="mt-2 max-w-xl text-[var(--muted)]">
             {claimed.length === 0
               ? `${user.name?.split(" ")[0] ?? "Hunter"}, no claims yet.`
-              : `${claimed.length} FREE claim${claimed.length === 1 ? "" : "s"} saved to your board.`}
+              : `${claimed.length} FREE claim${claimed.length === 1 ? "" : "s"} saved — share any with a friend.`}
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -70,12 +70,12 @@ export default async function ClaimedBoardPage() {
       ) : (
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {claimed.map((signal) => (
-            <div key={signal.id} className="relative">
-              <div className="absolute right-3 top-3 z-10 rounded-full border border-[var(--accent)]/40 bg-[var(--accent-dim)] px-2 py-0.5 text-[10px] font-bold tracking-wide text-[var(--accent)]">
-                ✓ CLAIMED
-              </div>
-              <SignalCard signal={signal} />
-            </div>
+            <BoardSignalItem
+              key={signal.id}
+              signal={signal}
+              badge="✓ CLAIMED"
+              badgeClassName="border-[var(--accent)]/40 bg-[var(--accent-dim)] text-[var(--accent)]"
+            />
           ))}
         </div>
       )}
