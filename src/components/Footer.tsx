@@ -24,6 +24,7 @@ export function Footer() {
         <div>
           <div className="text-xs font-bold tracking-[0.14em] text-[var(--faint)]">NETWORKS</div>
           <ul className="mt-3 space-y-2 text-sm text-[var(--muted)]">
+            <li><Link href="/submit" className="hover:text-white">Submit a FREE find</Link></li>
             <li><Link href="/join" className="hover:text-white">Members</Link></li>
             <li><Link href="/creators" className="hover:text-white">Creators</Link></li>
             <li><Link href="/brands" className="hover:text-white">Brands</Link></li>

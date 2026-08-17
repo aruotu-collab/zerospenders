@@ -5,14 +5,15 @@ import { LiveTicker } from "@/components/LiveTicker";
 import { ActivityFeed } from "@/components/ActivityFeed";
 import { countryLabel } from "@/lib/countries";
 import { getSelectedCountry } from "@/lib/country-server";
-import { getPulse, listActivity, listSignals } from "@/lib/queries";
+import { countSignals, getPulse, listActivity, listSignals } from "@/lib/queries";
 
 export const dynamic = "force-dynamic";
 
 export default async function LivePage() {
   const country = await getSelectedCountry();
-  const [signals, pulse, activity] = await Promise.all([
-    listSignals({ country }),
+  const [signals, total, pulse, activity] = await Promise.all([
+    listSignals({ country, take: 60 }),
+    countSignals({ country }),
     getPulse(),
     listActivity(),
   ]);
@@ -29,8 +30,8 @@ export default async function LivePage() {
           Everything changing now
         </h1>
         <p className="mt-2 text-[var(--muted)]">
-          High-value FREE signals detected, ranked and verified in real time for{" "}
-          {countryLabel(country)}.
+          {total.toLocaleString()} FREE signals for {countryLabel(country)} — showing top{" "}
+          {sorted.length} ranked now.
         </p>
       </div>
 

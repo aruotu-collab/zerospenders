@@ -58,6 +58,12 @@ export function Header({ initialCountry }: { initialCountry?: CountryCode }) {
 
             <div className="hidden items-center gap-0.5 lg:flex">
               <Link
+                href="/submit"
+                className="rounded-md px-2.5 py-1.5 text-[11px] font-semibold text-[var(--muted)] transition hover:bg-[var(--surface)] hover:text-white"
+              >
+                Submit
+              </Link>
+              <Link
                 href="/creators"
                 className="rounded-md px-2.5 py-1.5 text-[11px] font-semibold text-[var(--muted)] transition hover:bg-[var(--surface)] hover:text-white"
               >

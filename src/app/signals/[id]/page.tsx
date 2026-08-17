@@ -91,6 +91,17 @@ export default async function SignalPage({
             normalValue={signal.normalValue}
             cancelReminder={signal.cancelReminder}
           />
+
+          {signal.claimUrl && (
+            <a
+              href={signal.claimUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 inline-flex rounded-lg border border-[var(--info)]/40 bg-[rgba(61,184,255,0.1)] px-5 py-3 text-sm font-bold text-[var(--info)] transition hover:brightness-110"
+            >
+              Open official claim page →
+            </a>
+          )}
         </section>
 
         <aside className="space-y-4">

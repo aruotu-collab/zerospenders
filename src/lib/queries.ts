@@ -35,6 +35,7 @@ export async function listSignals(opts?: {
   category?: SignalCategory;
   nearOnly?: boolean;
   country?: CountryCode;
+  take?: number;
 }) {
   const signals = await prisma.signal.findMany({
     where: {
@@ -49,8 +50,24 @@ export async function listSignals(opts?: {
       updates: { orderBy: { createdAt: "desc" }, take: 6 },
     },
     orderBy: [{ freeScore: "desc" }, { updatedAt: "desc" }],
+    ...(opts?.take ? { take: opts.take } : {}),
   });
   return signals.map(mapSignal);
+}
+
+export async function countSignals(opts?: {
+  category?: SignalCategory;
+  country?: CountryCode;
+}) {
+  return prisma.signal.count({
+    where: {
+      active: true,
+      ...(opts?.category ? { category: categoryToDb[opts.category] } : {}),
+      ...(opts?.country
+        ? { OR: [{ country: opts.country }, { country: "GLOBAL" }] }
+        : {}),
+    },
+  });
 }
 
 export async function getSignalBySlug(slug: string) {
@@ -81,7 +98,7 @@ export async function listActivity(limit = 12) {
 
 export async function getBoardBundles(country: CountryCode) {
   const [all, pulse, activity, drops] = await Promise.all([
-    listSignals({ country }),
+    listSignals({ country, take: 200 }),
     getPulse(),
     listActivity(),
     listCreatorDrops(),

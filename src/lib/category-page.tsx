@@ -56,7 +56,7 @@ export function makeCategoryPage(slug: keyof typeof pages) {
   const meta = pages[slug];
   return async function CategoryPage() {
     const country = await getSelectedCountry();
-    const signals = await listSignals({ category: meta.category, country });
+    const signals = await listSignals({ category: meta.category, country, take: 100 });
     return (
       <CategoryBrowse
         title={meta.title}

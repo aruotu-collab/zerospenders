@@ -269,6 +269,48 @@ export async function recordSignalShare(signalSlug: string) {
   return { ok: true as const };
 }
 
+const submitOfferSchema = z.object({
+  title: z.string().min(3).max(120),
+  summary: z.string().min(10).max(500),
+  category: z.enum(["GET", "GO", "EAT", "LEARN", "PLAY", "TRY", "KIDS", "ONLINE"]),
+  country: z.string().min(2).max(8),
+  city: z.string().max(80).optional(),
+  location: z.string().max(120).optional(),
+  claimUrl: z.string().url().optional().or(z.literal("")),
+  normalValue: z.coerce.number().min(0).max(100000).optional(),
+});
+
+export async function submitOfferFind(input: z.infer<typeof submitOfferSchema>) {
+  const userId = await requireUserId();
+  if (!userId) return { ok: false as const, error: "auth_required" };
+
+  const data = submitOfferSchema.parse(input);
+
+  await prisma.offerSubmission.create({
+    data: {
+      userId,
+      title: data.title.trim(),
+      summary: data.summary.trim(),
+      category: data.category,
+      country: data.country.toUpperCase(),
+      city: data.city?.trim() || "",
+      location: data.location?.trim() || data.city?.trim() || "Nationwide",
+      claimUrl: data.claimUrl ? data.claimUrl.trim() : null,
+      normalValue: data.normalValue ?? 0,
+      status: "PENDING",
+    },
+  });
+
+  await prisma.activityEvent.create({
+    data: {
+      text: `New FREE find submitted for review: ${data.title.trim()}`,
+      userId,
+    },
+  });
+
+  return { ok: true as const };
+}
+
 export async function getDashboardData() {
   const session = await auth();
   if (!session?.user?.id) return null;

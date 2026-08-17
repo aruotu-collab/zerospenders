@@ -41,6 +41,7 @@ export interface FreeSignal {
   updates: { time: string; text: string }[];
   tags: string[];
   sponsored?: boolean;
+  claimUrl?: string;
 }
 
 export interface CreatorDrop {

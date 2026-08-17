@@ -63,6 +63,7 @@ model User {
   brandProfile   BrandProfile?
   dropApplications DropApplication[]
   activities    ActivityEvent[]
+  offerSubmissions OfferSubmission[]
 }
 
 model Account {
@@ -129,6 +130,9 @@ model Signal {
   tags           String[]          @default([])
   sponsored      Boolean           @default(false)
   claimUrl       String?
+  sourceName     String?
+  sourceType     String?
+  evergreen      Boolean           @default(false)
   active         Boolean           @default(true)
   createdAt      DateTime          @default(now())
   updatedAt      DateTime          @updatedAt
@@ -137,6 +141,33 @@ model Signal {
   watches   Watch[]
   reminders CancelReminder[]
   updates   SignalUpdate[]
+}
+
+enum SubmissionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model OfferSubmission {
+  id          String           @id @default(cuid())
+  userId      String?
+  title       String
+  summary     String
+  category    SignalCategory
+  country     String
+  city        String           @default("")
+  location    String           @default("")
+  claimUrl    String?
+  normalValue Float            @default(0)
+  status      SubmissionStatus @default(PENDING)
+  notes       String?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  user        User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([status, createdAt])
+  @@index([country])
 }
 
 model SignalUpdate {

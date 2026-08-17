@@ -36,7 +36,8 @@ async function main() {
   await prisma.signalUpdate.deleteMany();
   await prisma.activityEvent.deleteMany();
   await prisma.creatorDrop.deleteMany();
-  await prisma.signal.deleteMany();
+  // Keep bulk evergreen catalog; only refresh demo / community signals
+  await prisma.signal.deleteMany({ where: { evergreen: false } });
   await prisma.platformMetric.deleteMany();
 
   for (const signal of SIGNALS) {
@@ -76,6 +77,9 @@ async function main() {
         tags: signal.tags,
         sponsored: !!signal.sponsored,
         claimUrl: null,
+        evergreen: false,
+        sourceName: "ZeroSpenders demo",
+        sourceType: "CURATED",
       },
     });
 
@@ -128,7 +132,8 @@ async function main() {
     },
   });
 
-  console.log(`Seeded ${SIGNALS.length} signals, ${CREATOR_DROPS.length} drops.`);
+  const total = await prisma.signal.count();
+  console.log(`Seeded ${SIGNALS.length} demo signals, ${CREATOR_DROPS.length} drops. Catalog total: ${total}.`);
 }
 
 main()

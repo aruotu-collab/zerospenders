@@ -88,6 +88,7 @@ export function mapSignal(
     })),
     tags: signal.tags,
     sponsored: signal.sponsored || undefined,
+    claimUrl: signal.claimUrl ?? undefined,
   };
 }
 
