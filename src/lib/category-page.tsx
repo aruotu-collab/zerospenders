@@ -1,7 +1,8 @@
 import { CategoryBrowse } from "@/components/CategoryBrowse";
 import { countryLabel } from "@/lib/countries";
 import { getSelectedCountry } from "@/lib/country-server";
-import { listSignals } from "@/lib/queries";
+import { parsePage, takeForPage } from "@/lib/pagination";
+import { countSignals, listSignals } from "@/lib/queries";
 import type { SignalCategory } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -54,15 +55,28 @@ const pages: Record<
 
 export function makeCategoryPage(slug: keyof typeof pages) {
   const meta = pages[slug];
-  return async function CategoryPage() {
+  return async function CategoryPage({
+    searchParams,
+  }: {
+    searchParams: Promise<{ page?: string | string[] }>;
+  }) {
     const country = await getSelectedCountry();
-    const signals = await listSignals({ category: meta.category, country, take: 100 });
+    const { page: pageParam } = await searchParams;
+    const page = parsePage(pageParam);
+    const [signals, total] = await Promise.all([
+      listSignals({ category: meta.category, country, take: takeForPage(page) }),
+      countSignals({ category: meta.category, country }),
+    ]);
+
     return (
       <CategoryBrowse
         title={meta.title}
         blurb={meta.blurb}
         signals={signals}
         countryName={countryLabel(country)}
+        total={total}
+        page={page}
+        basePath={`/${slug}`}
       />
     );
   };

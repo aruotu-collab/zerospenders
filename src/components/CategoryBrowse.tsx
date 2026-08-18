@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LoadMore } from "./LoadMore";
 import { SignalCard } from "./SignalCard";
 import type { FreeSignal } from "@/lib/types";
 
@@ -7,12 +8,21 @@ export function CategoryBrowse({
   blurb,
   signals,
   countryName,
+  total,
+  page,
+  basePath,
 }: {
   title: string;
   blurb: string;
   signals: FreeSignal[];
   countryName?: string;
+  total?: number;
+  page?: number;
+  basePath?: string;
 }) {
+  const count = total ?? signals.length;
+  const showPager = Boolean(basePath && page && count > 0);
+
   return (
     <div className="mx-auto max-w-[1400px] px-4 py-8 md:px-6">
       <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
@@ -24,7 +34,8 @@ export function CategoryBrowse({
           <p className="mt-2 max-w-xl text-[var(--muted)]">{blurb}</p>
           {countryName && (
             <p className="mt-2 text-xs font-semibold tracking-wide text-[var(--info)]">
-              Showing signals for {countryName}
+              Showing {signals.length.toLocaleString()} of {count.toLocaleString()} signals for{" "}
+              {countryName}
             </p>
           )}
         </div>
@@ -44,11 +55,22 @@ export function CategoryBrowse({
             : "No live signals in this category yet. Check back soon."}
         </div>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {signals.map((signal) => (
-            <SignalCard key={signal.id} signal={signal} />
-          ))}
-        </div>
+        <>
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {signals.map((signal) => (
+              <SignalCard key={signal.id} signal={signal} />
+            ))}
+          </div>
+          {showPager && (
+            <LoadMore
+              shown={signals.length}
+              total={count}
+              page={page!}
+              basePath={basePath!}
+              label={countryName ? `in ${countryName}` : undefined}
+            />
+          )}
+        </>
       )}
     </div>
   );

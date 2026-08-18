@@ -36,6 +36,7 @@ export async function listSignals(opts?: {
   nearOnly?: boolean;
   country?: CountryCode;
   take?: number;
+  skip?: number;
 }) {
   const signals = await prisma.signal.findMany({
     where: {
@@ -50,6 +51,7 @@ export async function listSignals(opts?: {
       updates: { orderBy: { createdAt: "desc" }, take: 6 },
     },
     orderBy: [{ freeScore: "desc" }, { updatedAt: "desc" }],
+    ...(opts?.skip ? { skip: opts.skip } : {}),
     ...(opts?.take ? { take: opts.take } : {}),
   });
   return signals.map(mapSignal);

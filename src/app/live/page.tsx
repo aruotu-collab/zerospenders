@@ -3,16 +3,24 @@ import { SignalCard } from "@/components/SignalCard";
 import { PulseBar } from "@/components/PulseBar";
 import { LiveTicker } from "@/components/LiveTicker";
 import { ActivityFeed } from "@/components/ActivityFeed";
+import { LoadMore } from "@/components/LoadMore";
 import { countryLabel } from "@/lib/countries";
 import { getSelectedCountry } from "@/lib/country-server";
+import { parsePage, takeForPage } from "@/lib/pagination";
 import { countSignals, getPulse, listActivity, listSignals } from "@/lib/queries";
 
 export const dynamic = "force-dynamic";
 
-export default async function LivePage() {
+export default async function LivePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string | string[] }>;
+}) {
   const country = await getSelectedCountry();
+  const { page: pageParam } = await searchParams;
+  const page = parsePage(pageParam);
   const [signals, total, pulse, activity] = await Promise.all([
-    listSignals({ country, take: 60 }),
+    listSignals({ country, take: takeForPage(page) }),
     countSignals({ country }),
     getPulse(),
     listActivity(),
@@ -30,8 +38,8 @@ export default async function LivePage() {
           Everything changing now
         </h1>
         <p className="mt-2 text-[var(--muted)]">
-          {total.toLocaleString()} FREE signals for {countryLabel(country)} — showing top{" "}
-          {sorted.length} ranked now.
+          {total.toLocaleString()} FREE signals for {countryLabel(country)} — showing{" "}
+          {sorted.length.toLocaleString()} ranked now.
         </p>
       </div>
 
@@ -49,7 +57,18 @@ export default async function LivePage() {
               No live signals for {countryLabel(country)} yet. Switch country above or check back soon.
             </div>
           ) : (
-            sorted.map((signal) => <SignalCard key={signal.id} signal={signal} />)
+            <>
+              {sorted.map((signal) => (
+                <SignalCard key={signal.id} signal={signal} />
+              ))}
+              <LoadMore
+                shown={sorted.length}
+                total={total}
+                page={page}
+                basePath="/live"
+                label={`in ${countryLabel(country)}`}
+              />
+            </>
           )}
         </div>
         <Suspense fallback={null}>

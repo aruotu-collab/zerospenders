@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 export default async function TodayPage() {
   const country = await getSelectedCountry();
-  const signals = await listSignals({ country });
+  const signals = await listSignals({ country, take: 200 });
   const today = signals.filter(
     (s) => s.status === "live" || s.status === "new" || (s.endsInHours !== undefined && s.endsInHours < 24)
   );
