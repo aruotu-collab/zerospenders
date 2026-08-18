@@ -13,6 +13,7 @@
     "offers:generate": "tsx scripts/generate-evergreen-catalog.ts",
     "offers:import": "tsx scripts/import-offers.ts",
     "offers:sync": "tsx scripts/generate-evergreen-catalog.ts && tsx scripts/import-offers.ts",
+    "offers:from-chatgpt": "tsx scripts/convert-chatgpt-csv.ts",
     "postinstall": "prisma generate"
   },
   "prisma": {
