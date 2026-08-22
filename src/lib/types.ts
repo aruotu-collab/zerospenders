@@ -42,6 +42,9 @@ export interface FreeSignal {
   tags: string[];
   sponsored?: boolean;
   claimUrl?: string;
+  claimPhone?: string;
+  claimEmail?: string;
+  howToClaim?: string;
 }
 
 export interface CreatorDrop {

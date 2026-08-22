@@ -130,6 +130,9 @@ model Signal {
   tags           String[]          @default([])
   sponsored      Boolean           @default(false)
   claimUrl       String?
+  claimPhone     String?
+  claimEmail     String?
+  howToClaim     String?
   sourceName     String?
   sourceType     String?
   evergreen      Boolean           @default(false)
@@ -159,6 +162,9 @@ model OfferSubmission {
   city        String           @default("")
   location    String           @default("")
   claimUrl    String?
+  claimPhone  String?
+  claimEmail  String?
+  howToClaim  String?
   normalValue Float            @default(0)
   status      SubmissionStatus @default(PENDING)
   notes       String?

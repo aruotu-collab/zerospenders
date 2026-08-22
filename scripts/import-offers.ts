@@ -45,6 +45,9 @@ type OfferJson = {
   verification: VerificationLevel;
   tags: string[];
   claimUrl: string | null;
+  claimPhone?: string | null;
+  claimEmail?: string | null;
+  howToClaim?: string | null;
   sourceName: string;
   sourceType: string;
   evergreen: boolean;
@@ -86,6 +89,13 @@ async function upsertOffer(offer: OfferJson) {
     verification: offer.verification === "EXCLUSIVE" ? "EXCLUSIVE" : offer.verification,
     tags: offer.tags ?? [],
     claimUrl: offer.claimUrl,
+    claimPhone: offer.claimPhone ?? null,
+    claimEmail: offer.claimEmail ?? null,
+    howToClaim:
+      offer.howToClaim ??
+      (offer.claimUrl
+        ? "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation if the venue asks for it."
+        : null),
     sourceName: offer.sourceName,
     sourceType: offer.sourceType,
     evergreen: offer.evergreen ?? true,
@@ -112,6 +122,9 @@ async function upsertOffer(offer: OfferJson) {
       verification: data.verification,
       tags: data.tags,
       claimUrl: data.claimUrl,
+      claimPhone: data.claimPhone,
+      claimEmail: data.claimEmail,
+      howToClaim: data.howToClaim,
       sourceName: data.sourceName,
       sourceType: data.sourceType,
       evergreen: data.evergreen,

@@ -20,6 +20,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://www.amazon.com/amazonprime",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "Amazon Prime Free Trial",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -45,6 +48,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://www.amazon.com/music/unlimited",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "Amazon Music Unlimited Trial",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -70,6 +76,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://www.audible.com/",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "Audible Free Trial",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -95,6 +104,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://www.amazon.com/kindle-dbs/hz/subscribe/ku",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "Kindle Unlimited Free Trial",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -120,6 +132,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://www.apple.com/apple-music/",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "Apple Music Trial",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -145,6 +160,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://tv.apple.com/",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "Apple TV+ Trial",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -170,6 +188,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://www.apple.com/apple-arcade/",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "Apple Arcade Trial",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -195,6 +216,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://www.youtube.com/premium",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "YouTube Premium Trial",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -220,6 +244,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://music.youtube.com/",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "YouTube Music Premium Trial",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -245,6 +272,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://www.spotify.com/premium/",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "Spotify Premium Trial",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -270,6 +300,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://www.siriusxm.com/",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "SiriusXM Trial",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -295,6 +328,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://www.pandora.com/plus",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "Pandora Premium Trial",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -320,6 +356,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://tidal.com/",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "Tidal Trial",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -345,6 +384,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://www.qobuz.com/",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "Qobuz Trial",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -370,6 +412,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://www.deezer.com/",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "Deezer Trial",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -395,6 +440,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://www.hulu.com/",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "Hulu Trial availability",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -420,6 +468,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://www.paramountplus.com/",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "Paramount+ Trial",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -445,6 +496,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://www.peacocktv.com/",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "Peacock Trial availability",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -470,6 +524,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://www.discoveryplus.com/",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "Discovery+ Trial availability",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -495,6 +552,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://www.fubo.tv/",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "Fubo Trial",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -520,6 +580,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://tv.youtube.com/",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "YouTube TV Trial",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -545,6 +608,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://www.philo.com/",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "Philo Trial",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -570,6 +636,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://www.crunchyroll.com/",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "Crunchyroll Trial",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -595,6 +664,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://www.britbox.com/",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "BritBox Trial",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -620,6 +692,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://mubi.com/",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "MUBI Trial",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -645,6 +720,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://www.shudder.com/",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "Shudder Trial",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -670,6 +748,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://www.everand.com/",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "Scribd/Everand Trial",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -695,6 +776,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://www.headspace.com/",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "Headspace Trial",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -720,6 +804,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://www.calm.com/",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "Calm Trial",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -745,6 +832,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://www.strava.com/subscribe",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "Strava Subscription Trial",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -770,6 +860,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://www.onepeloton.com/app",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "Peloton App Trial",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -795,6 +888,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://classpass.com/",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "ClassPass Trial/credits check",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -820,6 +916,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://www.adobe.com/creativecloud.html",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "Adobe Creative Cloud Trial",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -845,6 +944,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://www.microsoft.com/microsoft-365/try",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "Microsoft 365 Trial",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false
@@ -870,6 +972,9 @@
       "cancel-reminder"
     ],
     "claimUrl": "https://www.linkedin.com/premium/",
+    "claimPhone": null,
+    "claimEmail": null,
+    "howToClaim": "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked.",
     "sourceName": "LinkedIn Premium Trial",
     "sourceType": "CHATGPT_CANDIDATE",
     "evergreen": false

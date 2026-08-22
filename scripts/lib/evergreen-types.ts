@@ -17,6 +17,9 @@ export type EvergreenSource = {
   city: string;
   country: string;
   claimUrl: string | null;
+  claimPhone?: string | null;
+  claimEmail?: string | null;
+  howToClaim?: string | null;
   subcategory: string;
   normalValue: number;
   summary: string;
@@ -46,6 +49,9 @@ export type EvergreenOffer = {
   verification: Verification;
   tags: string[];
   claimUrl: string | null;
+  claimPhone: string | null;
+  claimEmail: string | null;
+  howToClaim: string | null;
   sourceName: string;
   sourceType: SourceType;
   evergreen: true;

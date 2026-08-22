@@ -20,6 +20,7 @@ export async function getAdminStats(days = 30) {
     topSources,
     recentVisits,
     recentClicks,
+    pendingSubmissions,
   ] = await Promise.all([
     prisma.user.count(),
     prisma.user.groupBy({
@@ -108,6 +109,14 @@ export async function getAdminStats(days = 30) {
         createdAt: true,
       },
     }),
+    prisma.offerSubmission.findMany({
+      where: { status: "PENDING" },
+      orderBy: { createdAt: "desc" },
+      take: 50,
+      include: {
+        user: { select: { name: true, email: true } },
+      },
+    }),
   ]);
 
   // Unique IPs with visit counts (top recent)
@@ -164,6 +173,21 @@ export async function getAdminStats(days = 30) {
       visits: row.visits,
       lastSeen: row.last_seen,
       source: row.source || "direct",
+    })),
+    pendingSubmissions: pendingSubmissions.map((s) => ({
+      id: s.id,
+      title: s.title,
+      summary: s.summary,
+      category: s.category,
+      country: s.country,
+      city: s.city,
+      claimUrl: s.claimUrl,
+      claimPhone: s.claimPhone,
+      claimEmail: s.claimEmail,
+      howToClaim: s.howToClaim,
+      normalValue: s.normalValue,
+      createdAt: s.createdAt,
+      hunter: s.user?.name || s.user?.email || "Anonymous",
     })),
   };
 }

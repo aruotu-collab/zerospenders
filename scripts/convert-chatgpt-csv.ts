@@ -240,6 +240,11 @@ function toOffer(row: Row, verification: "VERIFIED" | "COMMUNITY") {
       row.city || null,
     ].filter(Boolean),
     claimUrl: row.source_url || null,
+    claimPhone: null,
+    claimEmail: null,
+    howToClaim: row.source_url
+      ? "1. Open the official page linked on this signal.\n2. Follow their free entry / signup / rewards steps.\n3. Bring confirmation (email, app, or code) if asked."
+      : "1. Search for this brand’s official rewards or offers page.\n2. Confirm the free offer is still live.\n3. Follow their signup or in-store steps.",
     sourceName: row.brand || "ChatGPT US seed",
     sourceType: trial
       ? "CHATGPT_CANDIDATE"

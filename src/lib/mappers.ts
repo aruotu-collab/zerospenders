@@ -89,6 +89,9 @@ export function mapSignal(
     tags: signal.tags,
     sponsored: signal.sponsored || undefined,
     claimUrl: signal.claimUrl ?? undefined,
+    claimPhone: signal.claimPhone ?? undefined,
+    claimEmail: signal.claimEmail ?? undefined,
+    howToClaim: signal.howToClaim ?? undefined,
   };
 }
 

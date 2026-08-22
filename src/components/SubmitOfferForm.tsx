@@ -62,6 +62,9 @@ export function SubmitOfferForm({ authed }: { authed: boolean }) {
             city: String(form.get("city") || ""),
             location: String(form.get("city") || "Nationwide"),
             claimUrl: String(form.get("claimUrl") || ""),
+            claimPhone: String(form.get("claimPhone") || ""),
+            claimEmail: String(form.get("claimEmail") || ""),
+            howToClaim: String(form.get("howToClaim") || ""),
             normalValue: Number(form.get("normalValue") || 0),
           });
           if (!result.ok) {
@@ -161,6 +164,42 @@ export function SubmitOfferForm({ authed }: { authed: boolean }) {
           name="claimUrl"
           type="url"
           placeholder="https://"
+          className="mt-1.5 w-full rounded-lg border border-[var(--border)] bg-[var(--bg)] px-4 py-3 text-sm text-white outline-none focus:border-[var(--accent)]/50"
+        />
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label className="text-xs font-semibold tracking-wide text-[var(--muted)]">
+            Phone to call (optional)
+          </label>
+          <input
+            name="claimPhone"
+            type="tel"
+            placeholder="e.g. 020 7946 0000"
+            className="mt-1.5 w-full rounded-lg border border-[var(--border)] bg-[var(--bg)] px-4 py-3 text-sm text-white outline-none focus:border-[var(--accent)]/50"
+          />
+        </div>
+        <div>
+          <label className="text-xs font-semibold tracking-wide text-[var(--muted)]">
+            Email to contact (optional)
+          </label>
+          <input
+            name="claimEmail"
+            type="email"
+            placeholder="info@venue.co.uk"
+            className="mt-1.5 w-full rounded-lg border border-[var(--border)] bg-[var(--bg)] px-4 py-3 text-sm text-white outline-none focus:border-[var(--accent)]/50"
+          />
+        </div>
+      </div>
+      <div>
+        <label className="text-xs font-semibold tracking-wide text-[var(--muted)]">
+          Step-by-step how to claim
+        </label>
+        <textarea
+          name="howToClaim"
+          rows={3}
+          maxLength={800}
+          placeholder="1. Open the website…&#10;2. Sign up / book…&#10;3. Bring confirmation…"
           className="mt-1.5 w-full rounded-lg border border-[var(--border)] bg-[var(--bg)] px-4 py-3 text-sm text-white outline-none focus:border-[var(--accent)]/50"
         />
       </div>

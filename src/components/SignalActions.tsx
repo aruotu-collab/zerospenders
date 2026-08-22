@@ -15,11 +15,13 @@ export function SignalActions({
   title,
   normalValue,
   cancelReminder,
+  hasClaimPath = false,
 }: {
   signalId: string;
   title: string;
   normalValue: number;
   cancelReminder: boolean;
+  hasClaimPath?: boolean;
 }) {
   const [claimed, setClaimed] = useState(false);
   const [watching, setWatching] = useState(false);
@@ -77,6 +79,20 @@ export function SignalActions({
 
   return (
     <div className="mt-8 space-y-3">
+      <p className="text-sm text-[var(--muted)]">
+        {hasClaimPath ? (
+          <>
+            Use <span className="font-semibold text-white">How to get this FREE</span> above for the
+            official website, phone or email. Saving below only keeps it on your board.
+          </>
+        ) : (
+          <>
+            No official claim link yet — confirm at the venue. Saving below keeps this find on your
+            board.
+          </>
+        )}
+      </p>
+
       <div className="flex flex-wrap gap-3">
         <button
           type="button"
@@ -86,17 +102,17 @@ export function SignalActions({
               () => toggleClaim(signalId),
               (r) => setClaimed(!!r.claimed),
               claimed
-                ? "Claim removed."
-                : `Claimed “${title}” — saved to your dashboard.`
+                ? "Removed from your claims."
+                : `Saved “${title}” to your claims board.`
             )
           }
           className={`rounded-lg px-5 py-3 text-sm font-bold transition disabled:opacity-60 ${
             claimed
               ? "border border-[var(--accent)]/40 bg-[var(--accent-dim)] text-[var(--accent)]"
-              : "bg-[var(--accent)] text-[#04140f] hover:brightness-110"
+              : "border border-[var(--border-strong)] text-white hover:border-[var(--accent)]/40"
           }`}
         >
-          {claimed ? "✓ Claimed" : "Claim FREE →"}
+          {claimed ? "✓ Saved to claims" : "Save to my claims"}
         </button>
 
         <button
@@ -192,7 +208,7 @@ export function SignalActions({
               </Link>
             </>
           )}
-          {toast.includes("Claimed") && (
+          {(toast.includes("Saved") || toast.includes("claims")) && (
             <>
               {" "}
               <Link href="/claimed" className="font-bold underline">

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getAdminStats } from "@/lib/admin-stats";
 import { requireAdmin } from "@/lib/require-admin";
+import { AdminSubmissions } from "@/components/AdminSubmissions";
 
 export const dynamic = "force-dynamic";
 
@@ -53,6 +54,8 @@ export default async function AdminPage() {
           </div>
         ))}
       </div>
+
+      <AdminSubmissions submissions={stats.pendingSubmissions} />
 
       <section className="surface mb-8 rounded-xl p-5">
         <h2 className="font-display text-lg font-semibold text-white">Members</h2>

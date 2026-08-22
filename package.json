@@ -11,8 +11,9 @@
     "db:seed": "tsx prisma/seed.ts",
     "db:setup": "prisma db push && tsx prisma/seed.ts && tsx scripts/import-offers.ts",
     "offers:generate": "tsx scripts/generate-evergreen-catalog.ts",
+    "offers:uk-discovery": "tsx scripts/generate-uk-discovery.ts",
     "offers:import": "tsx scripts/import-offers.ts",
-    "offers:sync": "tsx scripts/generate-evergreen-catalog.ts && tsx scripts/import-offers.ts",
+    "offers:sync": "tsx scripts/generate-evergreen-catalog.ts && tsx scripts/generate-uk-discovery.ts && tsx scripts/import-offers.ts",
     "offers:from-chatgpt": "tsx scripts/convert-chatgpt-csv.ts",
     "admin:promote": "tsx scripts/promote-admin.ts",
     "postinstall": "prisma generate"

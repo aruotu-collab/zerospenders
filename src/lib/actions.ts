@@ -277,6 +277,9 @@ const submitOfferSchema = z.object({
   city: z.string().max(80).optional(),
   location: z.string().max(120).optional(),
   claimUrl: z.string().url().optional().or(z.literal("")),
+  claimPhone: z.string().max(40).optional(),
+  claimEmail: z.string().email().optional().or(z.literal("")),
+  howToClaim: z.string().max(800).optional(),
   normalValue: z.coerce.number().min(0).max(100000).optional(),
 });
 
@@ -296,6 +299,9 @@ export async function submitOfferFind(input: z.infer<typeof submitOfferSchema>) 
       city: data.city?.trim() || "",
       location: data.location?.trim() || data.city?.trim() || "Nationwide",
       claimUrl: data.claimUrl ? data.claimUrl.trim() : null,
+      claimPhone: data.claimPhone?.trim() || null,
+      claimEmail: data.claimEmail?.trim() || null,
+      howToClaim: data.howToClaim?.trim() || null,
       normalValue: data.normalValue ?? 0,
       status: "PENDING",
     },
@@ -305,6 +311,125 @@ export async function submitOfferFind(input: z.infer<typeof submitOfferSchema>) 
     data: {
       text: `New FREE find submitted for review: ${data.title.trim()}`,
       userId,
+    },
+  });
+
+  return { ok: true as const };
+}
+
+function slugifyOffer(input: string) {
+  return input
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .replace(/-{2,}/g, "-")
+    .slice(0, 80);
+}
+
+async function uniqueSignalSlug(base: string) {
+  let slug = base || `offer-${Date.now()}`;
+  let i = 2;
+  while (await prisma.signal.findUnique({ where: { slug }, select: { id: true } })) {
+    slug = `${base}-${i}`;
+    i += 1;
+  }
+  return slug;
+}
+
+export async function approveOfferSubmission(submissionId: string) {
+  const { requireAdmin } = await import("@/lib/require-admin");
+  const session = await requireAdmin();
+  if (!session?.user) return { ok: false as const, error: "forbidden" };
+
+  const submission = await prisma.offerSubmission.findUnique({
+    where: { id: submissionId },
+  });
+  if (!submission) return { ok: false as const, error: "not_found" };
+  if (submission.status !== "PENDING") {
+    return { ok: false as const, error: "already_reviewed" };
+  }
+
+  const baseSlug = slugifyOffer(
+    `${submission.category}-${submission.country}-${submission.title}`
+  );
+  const slug = await uniqueSignalSlug(baseSlug);
+
+  const howToClaim =
+    submission.howToClaim?.trim() ||
+    (submission.claimUrl
+      ? "1. Open the official page linked on this signal.\n2. Follow their free entry / signup steps.\n3. Bring confirmation if the venue asks for it."
+      : submission.claimPhone || submission.claimEmail
+        ? "1. Contact them using the phone or email on this signal.\n2. Ask about the free offer and any booking rules.\n3. Confirm details before you travel."
+        : submission.summary);
+
+  await prisma.$transaction([
+    prisma.signal.create({
+      data: {
+        slug,
+        title: submission.title,
+        summary: submission.summary,
+        category: submission.category,
+        subcategory: "Community find",
+        location: submission.location || submission.city || "Nationwide",
+        city: submission.city || "Nationwide",
+        country: submission.country,
+        freeScore: 78,
+        normalValue: submission.normalValue,
+        verification: "COMMUNITY",
+        status: "NEW",
+        claimUrl: submission.claimUrl,
+        claimPhone: submission.claimPhone,
+        claimEmail: submission.claimEmail,
+        howToClaim,
+        sourceName: "Community hunter find",
+        sourceType: "COMMUNITY",
+        evergreen: false,
+        active: true,
+        tags: ["community", "hunter-find", submission.country.toLowerCase()],
+        updates: {
+          create: {
+            text: "Published from community submission — please confirm the claim path still works.",
+          },
+        },
+      },
+    }),
+    prisma.offerSubmission.update({
+      where: { id: submissionId },
+      data: { status: "APPROVED", notes: `Published as /signals/${slug}` },
+    }),
+    prisma.activityEvent.create({
+      data: {
+        text: `Admin published community find: ${submission.title}`,
+        userId: session.user.id,
+      },
+    }),
+  ]);
+
+  return { ok: true as const, slug };
+}
+
+export async function rejectOfferSubmission(submissionId: string, notes?: string) {
+  const { requireAdmin } = await import("@/lib/require-admin");
+  const session = await requireAdmin();
+  if (!session?.user) return { ok: false as const, error: "forbidden" };
+
+  const submission = await prisma.offerSubmission.findUnique({
+    where: { id: submissionId },
+    select: { id: true, status: true },
+  });
+  if (!submission) return { ok: false as const, error: "not_found" };
+  if (submission.status !== "PENDING") {
+    return { ok: false as const, error: "already_reviewed" };
+  }
+
+  await prisma.offerSubmission.update({
+    where: { id: submissionId },
+    data: {
+      status: "REJECTED",
+      notes: notes?.trim() || "Rejected by admin",
     },
   });
 

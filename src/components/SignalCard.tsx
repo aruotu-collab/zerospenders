@@ -82,8 +82,8 @@ export function SignalCard({
           {verification.label}
         </span>
         <span className="text-[var(--faint)]">{label}</span>
-        <span className="ml-auto text-[var(--muted)]">
-          {signal.claims.toLocaleString()} claimed · {signal.watching} watching
+        <span className="ml-auto font-semibold text-[var(--accent)]">
+          How to get this →
         </span>
       </div>
 

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { FreeScoreBadge } from "@/components/FreeScoreBadge";
 import { SignalActions } from "@/components/SignalActions";
-import { ClaimOutboundLink } from "@/components/ClaimOutboundLink";
+import { HowToClaim } from "@/components/HowToClaim";
 import { formatGBP, scoreLabel } from "@/lib/data";
 import { getSignalBySlug, listSignals } from "@/lib/queries";
 
@@ -27,6 +27,9 @@ export default async function SignalPage({
   if (!signal) notFound();
 
   const label = scoreLabel(signal.freeScore);
+  const locationLine = signal.distanceMiles
+    ? `${signal.location} · ${signal.distanceMiles} mi`
+    : signal.location;
 
   return (
     <div className="mx-auto max-w-[1100px] px-4 py-8 md:px-6">
@@ -66,6 +69,16 @@ export default async function SignalPage({
             {label}
           </div>
 
+          <HowToClaim
+            signalId={signal.id}
+            title={signal.title}
+            claimUrl={signal.claimUrl}
+            claimPhone={signal.claimPhone}
+            claimEmail={signal.claimEmail}
+            howToClaim={signal.howToClaim}
+            location={locationLine}
+          />
+
           <div className="mt-8 grid gap-3 sm:grid-cols-2">
             {[
               ["STATUS", signal.status === "live" ? "🟢 LIVE" : signal.status === "ending" ? "🟠 ENDING" : "⚡ NEW"],
@@ -77,7 +90,7 @@ export default async function SignalPage({
               ["LAST VERIFIED", `${signal.verifiedMinsAgo} mins ago`],
               ["REQUIRES CARD", signal.requiresCard ? "Yes" : "No"],
               ["CANCEL REMINDER", signal.cancelReminder ? "Available" : "N/A"],
-              ["LOCATION", signal.distanceMiles ? `${signal.location} · ${signal.distanceMiles} mi` : signal.location],
+              ["LOCATION", locationLine],
             ].map(([k, v]) => (
               <div key={k} className="rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)] px-4 py-3">
                 <div className="text-[10px] tracking-[0.14em] text-[var(--faint)]">{k}</div>
@@ -91,15 +104,8 @@ export default async function SignalPage({
             title={signal.title}
             normalValue={signal.normalValue}
             cancelReminder={signal.cancelReminder}
+            hasClaimPath={Boolean(signal.claimUrl || signal.claimPhone || signal.claimEmail)}
           />
-
-          {signal.claimUrl && (
-            <ClaimOutboundLink
-              href={signal.claimUrl}
-              signalId={signal.id}
-              title={signal.title}
-            />
-          )}
         </section>
 
         <aside className="space-y-4">

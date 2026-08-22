@@ -8,6 +8,7 @@ import {
   NPS_FEE_FREE_DAYS,
   NPS_FEE_PARKS,
 } from "./lib/evergreen-sources";
+import { UK_FREE_SOURCES } from "./lib/uk-free-sources";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = resolve(ROOT, "data/offers/evergreen.json");
@@ -309,6 +310,9 @@ function toOffer(source: EvergreenSource, slugPrefix?: string): EvergreenOffer {
     verification,
     tags: defaultTags(source, category),
     claimUrl: source.claimUrl,
+    claimPhone: source.claimPhone ?? null,
+    claimEmail: source.claimEmail ?? null,
+    howToClaim: source.howToClaim ?? null,
     sourceName,
     sourceType,
     evergreen: true,
@@ -335,7 +339,7 @@ function buildCatalog(): EvergreenOffer[] {
     offers.push({ ...offer, slug: uniqueSlug(offer.slug, used) });
   };
 
-  for (const source of [...EVERGREEN_SOURCES, ...EXTRA_SOURCES]) {
+  for (const source of [...EVERGREEN_SOURCES, ...EXTRA_SOURCES, ...UK_FREE_SOURCES]) {
     push(toOffer(source));
   }
 
