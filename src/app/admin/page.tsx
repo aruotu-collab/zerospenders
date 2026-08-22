@@ -54,6 +54,69 @@ export default async function AdminPage() {
         ))}
       </div>
 
+      <section className="surface mb-8 rounded-xl p-5">
+        <h2 className="font-display text-lg font-semibold text-white">Members</h2>
+        <p className="mt-1 text-sm text-[var(--muted)]">
+          All registered accounts — email, location, role and activity. Country is not stored on the
+          profile yet; postcode is the location we collect at signup.
+        </p>
+        <div className="mt-4 overflow-x-auto">
+          <table className="w-full min-w-[920px] text-left text-sm">
+            <thead className="text-[11px] tracking-[0.12em] text-[var(--faint)]">
+              <tr>
+                <th className="pb-2 pr-3 font-semibold">Name</th>
+                <th className="pb-2 pr-3 font-semibold">Email</th>
+                <th className="pb-2 pr-3 font-semibold">Role</th>
+                <th className="pb-2 pr-3 font-semibold">Postcode</th>
+                <th className="pb-2 pr-3 font-semibold">Radius</th>
+                <th className="pb-2 pr-3 font-semibold">Interests</th>
+                <th className="pb-2 pr-3 font-semibold">Claims</th>
+                <th className="pb-2 pr-3 font-semibold">Watching</th>
+                <th className="pb-2 pr-3 font-semibold">Saved</th>
+                <th className="pb-2 font-semibold">Joined</th>
+              </tr>
+            </thead>
+            <tbody>
+              {stats.members.length === 0 && (
+                <tr>
+                  <td colSpan={10} className="py-4 text-[var(--muted)]">
+                    No members yet.
+                  </td>
+                </tr>
+              )}
+              {stats.members.map((m) => (
+                <tr key={m.id} className="border-t border-[var(--border)]/60 align-top">
+                  <td className="py-2.5 pr-3 text-[var(--text)]">{m.name || "—"}</td>
+                  <td className="py-2.5 pr-3 font-mono text-[var(--info)]">{m.email}</td>
+                  <td className="py-2.5 pr-3">
+                    <span
+                      className={
+                        m.role === "ADMIN"
+                          ? "font-semibold text-[var(--warn)]"
+                          : "text-[var(--muted)]"
+                      }
+                    >
+                      {m.role}
+                    </span>
+                  </td>
+                  <td className="py-2.5 pr-3 text-[var(--muted)]">{m.postcode || "—"}</td>
+                  <td className="py-2.5 pr-3 text-[var(--muted)]">{m.radiusMiles} mi</td>
+                  <td className="py-2.5 pr-3 text-[var(--muted)]">
+                    {m.interests.length ? m.interests.join(", ") : "—"}
+                  </td>
+                  <td className="py-2.5 pr-3 font-mono text-[var(--accent)]">{m.claims}</td>
+                  <td className="py-2.5 pr-3 font-mono text-[var(--accent)]">{m.watches}</td>
+                  <td className="py-2.5 pr-3 font-mono text-[var(--muted)]">
+                    £{m.savedGBP.toFixed(0)}
+                  </td>
+                  <td className="py-2.5 text-[var(--muted)]">{fmt(m.createdAt)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
       <div className="mb-8 grid gap-6 lg:grid-cols-2">
         <section className="surface rounded-xl p-5">
           <h2 className="font-display text-lg font-semibold text-white">What people click</h2>
