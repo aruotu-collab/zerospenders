@@ -10,7 +10,13 @@ const CATEGORY_LINKS = CATEGORIES.filter((c) =>
   ["get", "go", "eat", "learn", "play", "try", "kids", "online", "near", "today"].includes(c.slug)
 );
 
-export function Header({ initialCountry }: { initialCountry?: CountryCode }) {
+export function Header({
+  initialCountry,
+  showAdmin = false,
+}: {
+  initialCountry?: CountryCode;
+  showAdmin?: boolean;
+}) {
   const [open, setOpen] = useState(false);
   const countryName = countryLabel(initialCountry ?? "GB");
 
@@ -81,6 +87,14 @@ export function Header({ initialCountry }: { initialCountry?: CountryCode }) {
               >
                 Dashboard
               </Link>
+              {showAdmin && (
+                <Link
+                  href="/admin"
+                  className="rounded-md px-2.5 py-1.5 text-[11px] font-bold tracking-wide text-[var(--warn)] transition hover:bg-[var(--surface)] hover:text-white"
+                >
+                  Admin
+                </Link>
+              )}
             </div>
 
             <Link
@@ -182,6 +196,15 @@ export function Header({ initialCountry }: { initialCountry?: CountryCode }) {
             >
               Dashboard
             </Link>
+            {showAdmin && (
+              <Link
+                href="/admin"
+                onClick={() => setOpen(false)}
+                className="rounded-md border border-[var(--warn)]/40 bg-[rgba(255,176,32,0.12)] px-3 py-2 text-xs font-bold text-[var(--warn)]"
+              >
+                Admin
+              </Link>
+            )}
           </div>
         </div>
       )}

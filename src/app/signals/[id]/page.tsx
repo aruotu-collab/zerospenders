@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { FreeScoreBadge } from "@/components/FreeScoreBadge";
 import { SignalActions } from "@/components/SignalActions";
+import { ClaimOutboundLink } from "@/components/ClaimOutboundLink";
 import { formatGBP, scoreLabel } from "@/lib/data";
 import { getSignalBySlug, listSignals } from "@/lib/queries";
 
@@ -93,14 +94,11 @@ export default async function SignalPage({
           />
 
           {signal.claimUrl && (
-            <a
+            <ClaimOutboundLink
               href={signal.claimUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4 inline-flex rounded-lg border border-[var(--info)]/40 bg-[rgba(61,184,255,0.1)] px-5 py-3 text-sm font-bold text-[var(--info)] transition hover:brightness-110"
-            >
-              Open official claim page →
-            </a>
+              signalId={signal.id}
+              title={signal.title}
+            />
           )}
         </section>
 

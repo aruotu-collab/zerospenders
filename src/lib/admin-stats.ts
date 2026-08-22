@@ -1,0 +1,128 @@
+import { Prisma } from "@prisma/client";
+import { prisma } from "@/lib/db";
+
+function sinceDays(days: number) {
+  return new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+}
+
+export async function getAdminStats(days = 30) {
+  const since = sinceDays(days);
+
+  const [
+    memberCount,
+    membersByRole,
+    visitCount,
+    clickCount,
+    uniqueIps,
+    topClicks,
+    topPaths,
+    topSources,
+    recentVisits,
+    recentClicks,
+  ] = await Promise.all([
+    prisma.user.count(),
+    prisma.user.groupBy({
+      by: ["role"],
+      _count: { _all: true },
+    }),
+    prisma.siteVisit.count({ where: { createdAt: { gte: since } } }),
+    prisma.siteClick.count({ where: { createdAt: { gte: since } } }),
+    prisma.siteVisit.findMany({
+      where: { createdAt: { gte: since }, ip: { not: null } },
+      distinct: ["ip"],
+      select: { ip: true },
+      take: 5000,
+    }),
+    prisma.siteClick.groupBy({
+      by: ["targetLabel", "targetType", "targetId"],
+      where: { createdAt: { gte: since } },
+      _count: { _all: true },
+      orderBy: { _count: { targetLabel: "desc" } },
+      take: 25,
+    }),
+    prisma.siteVisit.groupBy({
+      by: ["path"],
+      where: { createdAt: { gte: since } },
+      _count: { _all: true },
+      orderBy: { _count: { path: "desc" } },
+      take: 20,
+    }),
+    prisma.siteVisit.groupBy({
+      by: ["source"],
+      where: { createdAt: { gte: since } },
+      _count: { _all: true },
+      orderBy: { _count: { source: "desc" } },
+      take: 20,
+    }),
+    prisma.siteVisit.findMany({
+      where: { createdAt: { gte: since } },
+      orderBy: { createdAt: "desc" },
+      take: 40,
+      select: {
+        id: true,
+        path: true,
+        referrer: true,
+        source: true,
+        ip: true,
+        country: true,
+        createdAt: true,
+      },
+    }),
+    prisma.siteClick.findMany({
+      where: { createdAt: { gte: since } },
+      orderBy: { createdAt: "desc" },
+      take: 40,
+      select: {
+        id: true,
+        path: true,
+        targetType: true,
+        targetLabel: true,
+        targetId: true,
+        href: true,
+        ip: true,
+        createdAt: true,
+      },
+    }),
+  ]);
+
+  // Unique IPs with visit counts (top recent)
+  const ipRows = await prisma.$queryRaw<
+    { ip: string; visits: number; last_seen: Date; source: string | null }[]
+  >(Prisma.sql`
+    SELECT ip, COUNT(*)::int AS visits, MAX("createdAt") AS last_seen,
+           (ARRAY_AGG(source ORDER BY "createdAt" DESC))[1] AS source
+    FROM "SiteVisit"
+    WHERE "createdAt" >= ${since} AND ip IS NOT NULL
+    GROUP BY ip
+    ORDER BY visits DESC, last_seen DESC
+    LIMIT 40
+  `);
+
+  return {
+    days,
+    memberCount,
+    membersByRole: Object.fromEntries(membersByRole.map((r) => [r.role, r._count._all])),
+    visitCount,
+    clickCount,
+    uniqueIpCount: uniqueIps.length,
+    topClicks: topClicks.map((row) => ({
+      label: row.targetLabel || row.targetId || row.targetType,
+      type: row.targetType,
+      id: row.targetId,
+      count: row._count._all,
+    })),
+    topPaths: topPaths.map((row) => ({ path: row.path, count: row._count._all })),
+    topSources: topSources.map((row) => ({
+      source: row.source || "direct",
+      count: row._count._all,
+    })),
+    recentVisits,
+    recentClicks,
+    topIps: ipRows.map((row) => ({
+      ip: row.ip,
+      visits: row.visits,
+      lastSeen: row.last_seen,
+      source: row.source || "direct",
+    })),
+  };
+}

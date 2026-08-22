@@ -4,6 +4,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
+import { isAdminEmail } from "@/lib/admin";
 import type { Role } from "@prisma/client";
 
 declare module "next-auth" {
@@ -26,6 +27,7 @@ declare module "@auth/core/jwt" {
   interface JWT {
     id?: string;
     role?: Role;
+    email?: string | null;
   }
 }
 
@@ -59,11 +61,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const valid = await bcrypt.compare(parsed.data.password, user.passwordHash);
         if (!valid) return null;
 
+        // Ensure designated owner stays ADMIN in the database.
+        let role = user.role;
+        if (isAdminEmail(user.email) && role !== "ADMIN") {
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { role: "ADMIN" },
+          });
+          role = "ADMIN";
+        }
+
         return {
           id: user.id,
           email: user.email,
           name: user.name,
-          role: user.role,
+          role,
         };
       },
     }),
@@ -73,13 +85,23 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (user) {
         token.id = user.id;
         token.role = user.role;
+        token.email = user.email;
       }
+
+      if (isAdminEmail(token.email) || isAdminEmail(user?.email)) {
+        token.role = "ADMIN";
+      }
+
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string;
-        session.user.role = (token.role as Role) ?? "MEMBER";
+        const email = session.user.email ?? token.email;
+        session.user.role =
+          isAdminEmail(email) || token.role === "ADMIN"
+            ? "ADMIN"
+            : ((token.role as Role) ?? "MEMBER");
       }
       return session;
     },

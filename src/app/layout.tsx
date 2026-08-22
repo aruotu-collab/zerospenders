@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Space_Grotesk, IBM_Plex_Sans, JetBrains_Mono } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { AnalyticsTracker } from "@/components/AnalyticsTracker";
+import { auth } from "@/auth";
+import { isAdminEmail } from "@/lib/admin";
 import { getSelectedCountry } from "@/lib/country-server";
 import "./globals.css";
 
@@ -69,7 +73,9 @@ export const metadata: Metadata = {
 const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const country = await getSelectedCountry();
+  const [country, session] = await Promise.all([getSelectedCountry(), auth()]);
+  const showAdmin =
+    session?.user?.role === "ADMIN" || isAdminEmail(session?.user?.email);
 
   return (
     <html
@@ -77,9 +83,12 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       className={`${display.variable} ${body.variable} ${mono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
-        <Header initialCountry={country} />
+        <Header initialCountry={country} showAdmin={showAdmin} />
         <main className="flex-1">{children}</main>
         <Footer />
+        <Suspense fallback={null}>
+          <AnalyticsTracker />
+        </Suspense>
         {gaId ? <GoogleAnalytics gaId={gaId} /> : null}
       </body>
     </html>

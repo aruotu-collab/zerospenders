@@ -1,7 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import type { FreeSignal } from "@/lib/types";
 import { formatGBP, scoreLabel } from "@/lib/data";
 import { FreeScoreBadge } from "./FreeScoreBadge";
+import { trackClick } from "./AnalyticsTracker";
 
 const statusMeta = {
   live: { label: "LIVE", className: "text-[var(--accent)]" },
@@ -25,10 +28,19 @@ export function SignalCard({
   const status = statusMeta[signal.status];
   const verification = verificationMeta[signal.verification];
   const label = scoreLabel(signal.freeScore);
+  const href = `/signals/${signal.id}`;
 
   return (
     <Link
-      href={`/signals/${signal.id}`}
+      href={href}
+      onClick={() =>
+        trackClick({
+          targetType: "signal",
+          targetId: signal.id,
+          targetLabel: signal.title,
+          href,
+        })
+      }
       className="group block surface rounded-xl p-4 transition hover:border-[var(--accent)]/40 hover:bg-[var(--surface-2)]"
     >
       <div className="flex items-start justify-between gap-3">

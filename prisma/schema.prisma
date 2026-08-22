@@ -296,3 +296,38 @@ model PlatformMetric {
   peopleWatching Int      @default(0)
   updatedAt      DateTime @updatedAt
 }
+
+model SiteVisit {
+  id          String   @id @default(cuid())
+  path        String
+  referrer    String?
+  source      String?
+  medium      String?
+  campaign    String?
+  ip          String?
+  userAgent   String?
+  country     String?
+  createdAt   DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([ip, createdAt])
+  @@index([source, createdAt])
+  @@index([path, createdAt])
+}
+
+model SiteClick {
+  id          String   @id @default(cuid())
+  path        String
+  targetType  String
+  targetId    String?
+  targetLabel String?
+  href        String?
+  ip          String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([targetType, createdAt])
+  @@index([targetId, createdAt])
+  @@index([ip, createdAt])
+}
