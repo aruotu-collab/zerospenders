@@ -19,6 +19,8 @@ type SubmissionRow = {
   claimEmail: string | null;
   howToClaim: string | null;
   normalValue: number;
+  source: string;
+  autoScore: number | null;
   createdAt: string | Date;
   hunter: string;
 };
@@ -53,7 +55,7 @@ export function AdminSubmissions({ submissions }: { submissions: SubmissionRow[]
         Pending FREE finds ({submissions.length})
       </h2>
       <p className="mt-1 text-sm text-[var(--muted)]">
-        Approve to publish live with website / phone / email claim path. Reject to dismiss.
+        Hunter finds and auto-discovered deals (Reddit, Eventbrite, RSS). Approve to publish live.
       </p>
       {message && (
         <p className="mt-3 rounded-lg border border-[var(--accent)]/30 bg-[var(--accent-dim)] px-3 py-2 text-sm text-[var(--accent)]">
@@ -75,7 +77,8 @@ export function AdminSubmissions({ submissions }: { submissions: SubmissionRow[]
                 <p className="mt-1 text-sm text-[var(--muted)]">{s.summary}</p>
                 <p className="mt-2 text-[11px] text-[var(--faint)]">
                   {s.category} · {s.country}
-                  {s.city ? ` · ${s.city}` : ""} · by {s.hunter} · £{s.normalValue}
+                  {s.city ? ` · ${s.city}` : ""} · {s.hunter}
+                  {s.autoScore != null ? ` · score ${s.autoScore}` : ""} · £{s.normalValue}
                 </p>
               </div>
               <div className="flex flex-wrap gap-2">

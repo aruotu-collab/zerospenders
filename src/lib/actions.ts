@@ -384,8 +384,11 @@ export async function approveOfferSubmission(submissionId: string) {
         claimPhone: submission.claimPhone,
         claimEmail: submission.claimEmail,
         howToClaim,
-        sourceName: "Community hunter find",
-        sourceType: "COMMUNITY",
+        sourceName:
+          submission.source === "hunter"
+            ? "Community hunter find"
+            : `Auto discovery · ${submission.source}`,
+        sourceType: submission.source === "hunter" ? "COMMUNITY" : "CRON",
         evergreen: false,
         active: true,
         tags: ["community", "hunter-find", submission.country.toLowerCase()],

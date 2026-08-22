@@ -58,6 +58,48 @@ export default async function AdminPage() {
       <AdminSubmissions submissions={stats.pendingSubmissions} />
 
       <section className="surface mb-8 rounded-xl p-5">
+        <h2 className="font-display text-lg font-semibold text-white">Daily discovery runs</h2>
+        <p className="mt-1 text-sm text-[var(--muted)]">
+          Cron scans Reddit, Eventbrite and RSS every day at 06:00 UTC. Recheck runs Sundays at 05:00
+          UTC.
+        </p>
+        <div className="mt-4 overflow-x-auto">
+          <table className="w-full min-w-[640px] text-left text-sm">
+            <thead className="text-[11px] tracking-[0.12em] text-[var(--faint)]">
+              <tr>
+                <th className="pb-2 pr-3 font-semibold">When</th>
+                <th className="pb-2 pr-3 font-semibold">Job</th>
+                <th className="pb-2 pr-3 font-semibold">Found</th>
+                <th className="pb-2 pr-3 font-semibold">Queued</th>
+                <th className="pb-2 pr-3 font-semibold">Published</th>
+                <th className="pb-2 font-semibold">Skipped</th>
+              </tr>
+            </thead>
+            <tbody>
+              {stats.discoveryRuns.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="py-4 text-[var(--muted)]">
+                    No runs yet — set CRON_SECRET on Vercel and deploy, or run npm run discovery:run
+                    locally.
+                  </td>
+                </tr>
+              )}
+              {stats.discoveryRuns.map((r) => (
+                <tr key={r.id} className="border-t border-[var(--border)]/60">
+                  <td className="py-2 pr-3 text-[var(--muted)]">{fmt(r.createdAt)}</td>
+                  <td className="py-2 pr-3 text-[var(--text)]">{r.kind}</td>
+                  <td className="py-2 pr-3 font-mono text-[var(--info)]">{r.found}</td>
+                  <td className="py-2 pr-3 font-mono text-[var(--warn)]">{r.queued}</td>
+                  <td className="py-2 pr-3 font-mono text-[var(--accent)]">{r.published}</td>
+                  <td className="py-2 font-mono text-[var(--muted)]">{r.skipped}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="surface mb-8 rounded-xl p-5">
         <h2 className="font-display text-lg font-semibold text-white">Members</h2>
         <p className="mt-1 text-sm text-[var(--muted)]">
           All registered accounts — email, location, role and activity. Country is not stored on the

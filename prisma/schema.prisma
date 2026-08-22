@@ -167,13 +167,31 @@ model OfferSubmission {
   howToClaim  String?
   normalValue Float            @default(0)
   status      SubmissionStatus @default(PENDING)
+  source      String           @default("hunter")
+  externalId  String?
+  autoScore   Int?
   notes       String?
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
   user        User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
 
+  @@unique([source, externalId])
   @@index([status, createdAt])
   @@index([country])
+  @@index([source])
+}
+
+model DiscoveryRun {
+  id        String   @id @default(cuid())
+  kind      String
+  found     Int      @default(0)
+  queued    Int      @default(0)
+  published Int      @default(0)
+  skipped   Int      @default(0)
+  detail    String?  @db.Text
+  createdAt DateTime @default(now())
+
+  @@index([kind, createdAt])
 }
 
 model SignalUpdate {
