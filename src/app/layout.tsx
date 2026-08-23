@@ -74,8 +74,8 @@ const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const [country, session] = await Promise.all([getSelectedCountry(), auth()]);
-  const showAdmin =
-    session?.user?.role === "ADMIN" || isAdminEmail(session?.user?.email);
+  // Admin menu is email-locked — only allowlisted owner emails, never role alone.
+  const showAdmin = isAdminEmail(session?.user?.email);
 
   return (
     <html
@@ -83,7 +83,12 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       className={`${display.variable} ${body.variable} ${mono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
-        <Header initialCountry={country} showAdmin={showAdmin} />
+        <Header
+          initialCountry={country}
+          showAdmin={showAdmin}
+          userName={session?.user?.name ?? null}
+          userEmail={session?.user?.email ?? null}
+        />
         <main className="flex-1">{children}</main>
         <Footer />
         <Suspense fallback={null}>

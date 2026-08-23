@@ -61,14 +61,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const valid = await bcrypt.compare(parsed.data.password, user.passwordHash);
         if (!valid) return null;
 
-        // Ensure designated owner stays ADMIN in the database.
+        // Admin is email-locked: promote allowlisted owner; demote anyone else with ADMIN.
         let role = user.role;
-        if (isAdminEmail(user.email) && role !== "ADMIN") {
+        if (isAdminEmail(user.email)) {
+          if (role !== "ADMIN") {
+            await prisma.user.update({
+              where: { id: user.id },
+              data: { role: "ADMIN" },
+            });
+            role = "ADMIN";
+          }
+        } else if (role === "ADMIN") {
           await prisma.user.update({
             where: { id: user.id },
-            data: { role: "ADMIN" },
+            data: { role: "MEMBER" },
           });
-          role = "ADMIN";
+          role = "MEMBER";
         }
 
         return {
@@ -88,8 +96,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.email = user.email;
       }
 
-      if (isAdminEmail(token.email) || isAdminEmail(user?.email)) {
+      const email = user?.email ?? token.email;
+      // Never grant ADMIN from DB role alone — only allowlisted emails.
+      if (isAdminEmail(email)) {
         token.role = "ADMIN";
+      } else if (token.role === "ADMIN") {
+        token.role = "MEMBER";
       }
 
       return token;
@@ -98,9 +110,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (session.user) {
         session.user.id = token.id as string;
         const email = session.user.email ?? token.email;
-        session.user.role =
-          isAdminEmail(email) || token.role === "ADMIN"
-            ? "ADMIN"
+        session.user.role = isAdminEmail(email)
+          ? "ADMIN"
+          : token.role === "ADMIN"
+            ? "MEMBER"
             : ((token.role as Role) ?? "MEMBER");
       }
       return session;

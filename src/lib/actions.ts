@@ -2,7 +2,7 @@
 
 import bcrypt from "bcryptjs";
 import { z } from "zod";
-import { auth, signIn } from "@/auth";
+import { auth, signIn, signOut } from "@/auth";
 import { prisma } from "@/lib/db";
 import { AuthError } from "next-auth";
 import type { Role } from "@prisma/client";
@@ -96,6 +96,10 @@ export async function loginUser(email: string, password: string) {
     }
     throw error;
   }
+}
+
+export async function logoutUser() {
+  await signOut({ redirectTo: "/" });
 }
 
 async function requireUserId() {
