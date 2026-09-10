@@ -1,23 +1,13 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { isCronAuthorized } from "@/lib/cron-auth";
 import { runDailyDiscovery } from "@/lib/discovery/run-discovery";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
-function authorized(request: Request) {
-  const secret = process.env.CRON_SECRET;
-  if (!secret) return false;
-  const auth = request.headers.get("authorization");
-  if (auth === `Bearer ${secret}`) return true;
-  if (process.env.VERCEL === "1" && request.headers.get("x-vercel-cron") === "1") {
-    return true;
-  }
-  return false;
-}
-
 export async function GET(request: Request) {
-  if (!authorized(request)) {
+  if (!isCronAuthorized(request)) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }
 
