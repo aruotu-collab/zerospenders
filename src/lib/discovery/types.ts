@@ -21,6 +21,7 @@ export type DiscoveryStats = {
   queued: number;
   published: number;
   skipped: number;
+  emailsSent?: number;
   errors: string[];
   sources: Record<string, number>;
 };

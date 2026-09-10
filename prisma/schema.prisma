@@ -49,6 +49,7 @@ model User {
   postcode      String?
   radiusMiles   Int       @default(10)
   interests     String[]  @default([])
+  emailOptIn    Boolean   @default(true)
   savedGBP      Float     @default(0)
   hunterLevel   String    @default("Freebie Rookie")
   createdAt     DateTime  @default(now())
@@ -64,6 +65,7 @@ model User {
   dropApplications DropApplication[]
   activities    ActivityEvent[]
   offerSubmissions OfferSubmission[]
+  digestSends   DigestSend[]
 }
 
 model Account {
@@ -192,6 +194,20 @@ model DiscoveryRun {
   createdAt DateTime @default(now())
 
   @@index([kind, createdAt])
+}
+
+model DigestSend {
+  id         String   @id @default(cuid())
+  userId     String?
+  email      String
+  offerCount Int
+  interests  String[] @default([])
+  providerId String?
+  createdAt  DateTime @default(now())
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([email, createdAt])
+  @@index([createdAt])
 }
 
 model SignalUpdate {

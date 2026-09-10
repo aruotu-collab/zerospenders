@@ -2,6 +2,7 @@ import type { PrismaClient } from "@prisma/client";
 import { fetchEventbriteCandidates } from "@/lib/discovery/connectors/eventbrite";
 import { fetchRedditCandidates } from "@/lib/discovery/connectors/reddit";
 import { fetchRssCandidates } from "@/lib/discovery/connectors/rss";
+import { notifyMembersOfNewOffers } from "@/lib/discovery/notify-members";
 import type { DiscoveryStats, RawCandidate } from "@/lib/discovery/types";
 import { slugifyOffer, verifyClaimUrl } from "@/lib/discovery/verify-offer";
 
@@ -72,66 +73,66 @@ async function publishCandidate(
   prisma: PrismaClient,
   candidate: RawCandidate,
   autoScore: number
-) {
+): Promise<string> {
   const baseSlug = slugifyOffer(
     `${candidate.category}-${candidate.country}-${candidate.title}`
   );
   const slug = await uniqueSignalSlug(prisma, baseSlug);
 
-  await prisma.$transaction([
-    prisma.signal.create({
-      data: {
-        slug,
-        title: candidate.title,
-        summary: candidate.summary,
-        category: candidate.category,
-        subcategory: `Auto · ${candidate.source}`,
-        location: candidate.location,
-        city: candidate.city,
-        country: candidate.country,
-        freeScore: Math.max(autoScore, 70),
-        normalValue: candidate.normalValue,
-        verification: candidate.source === "eventbrite" ? "VERIFIED" : "COMMUNITY",
-        status: "NEW",
-        claimUrl: candidate.claimUrl,
-        howToClaim: candidate.howToClaim,
-        sourceName: `Auto discovery · ${candidate.source}`,
-        sourceType: "CRON",
-        evergreen: false,
-        active: true,
-        tags: ["auto-discovery", "live", candidate.source, candidate.country.toLowerCase()],
-        updates: {
-          create: {
-            text: `Auto-published live from ${candidate.source} (score ${autoScore}).`,
-          },
+  const signal = await prisma.signal.create({
+    data: {
+      slug,
+      title: candidate.title,
+      summary: candidate.summary,
+      category: candidate.category,
+      subcategory: `Auto · ${candidate.source}`,
+      location: candidate.location,
+      city: candidate.city,
+      country: candidate.country,
+      freeScore: Math.max(autoScore, 70),
+      normalValue: candidate.normalValue,
+      verification: candidate.source === "eventbrite" ? "VERIFIED" : "COMMUNITY",
+      status: "NEW",
+      claimUrl: candidate.claimUrl,
+      howToClaim: candidate.howToClaim,
+      sourceName: `Auto discovery · ${candidate.source}`,
+      sourceType: "CRON",
+      evergreen: false,
+      active: true,
+      tags: ["auto-discovery", "live", candidate.source, candidate.country.toLowerCase()],
+      updates: {
+        create: {
+          text: `Auto-published live from ${candidate.source} (score ${autoScore}).`,
         },
       },
-    }),
-    prisma.offerSubmission.create({
-      data: {
-        title: candidate.title,
-        summary: candidate.summary,
-        category: candidate.category,
-        country: candidate.country,
-        city: candidate.city,
-        location: candidate.location,
-        claimUrl: candidate.claimUrl,
-        howToClaim: candidate.howToClaim,
-        normalValue: candidate.normalValue,
-        status: "APPROVED",
-        source: candidate.source,
-        externalId: candidate.externalId,
-        autoScore,
-        notes: `Auto-published live as /signals/${slug}`,
-      },
-    }),
-  ]);
+    },
+    select: { id: true },
+  });
 
-  return slug;
+  await prisma.offerSubmission.create({
+    data: {
+      title: candidate.title,
+      summary: candidate.summary,
+      category: candidate.category,
+      country: candidate.country,
+      city: candidate.city,
+      location: candidate.location,
+      claimUrl: candidate.claimUrl,
+      howToClaim: candidate.howToClaim,
+      normalValue: candidate.normalValue,
+      status: "APPROVED",
+      source: candidate.source,
+      externalId: candidate.externalId,
+      autoScore,
+      notes: `Auto-published live as /signals/${slug}`,
+    },
+  });
+
+  return signal.id;
 }
 
 /** Publish any older PENDING auto-finds that were waiting for admin review. */
-async function flushPendingAutoFinds(prisma: PrismaClient) {
+async function flushPendingAutoFinds(prisma: PrismaClient): Promise<string[]> {
   const pending = await prisma.offerSubmission.findMany({
     where: {
       status: "PENDING",
@@ -140,7 +141,8 @@ async function flushPendingAutoFinds(prisma: PrismaClient) {
     take: 100,
   });
 
-  let published = 0;
+  const publishedIds: string[] = [];
+
   for (const submission of pending) {
     if (!submission.claimUrl) {
       await prisma.offerSubmission.update({
@@ -199,48 +201,49 @@ async function flushPendingAutoFinds(prisma: PrismaClient) {
     );
     const slug = await uniqueSignalSlug(prisma, baseSlug);
 
-    await prisma.$transaction([
-      prisma.signal.create({
-        data: {
-          slug,
-          title: candidate.title,
-          summary: candidate.summary,
-          category: candidate.category,
-          subcategory: `Auto · ${candidate.source}`,
-          location: candidate.location,
-          city: candidate.city,
-          country: candidate.country,
-          freeScore: Math.max(check.score, 70),
-          normalValue: candidate.normalValue,
-          verification: "COMMUNITY",
-          status: "NEW",
-          claimUrl: candidate.claimUrl,
-          howToClaim: candidate.howToClaim,
-          sourceName: `Auto discovery · ${candidate.source}`,
-          sourceType: "CRON",
-          evergreen: false,
-          active: true,
-          tags: ["auto-discovery", "live", candidate.source, candidate.country.toLowerCase()],
-          updates: {
-            create: {
-              text: `Auto-published from pending queue (score ${check.score}).`,
-            },
+    const signal = await prisma.signal.create({
+      data: {
+        slug,
+        title: candidate.title,
+        summary: candidate.summary,
+        category: candidate.category,
+        subcategory: `Auto · ${candidate.source}`,
+        location: candidate.location,
+        city: candidate.city,
+        country: candidate.country,
+        freeScore: Math.max(check.score, 70),
+        normalValue: candidate.normalValue,
+        verification: "COMMUNITY",
+        status: "NEW",
+        claimUrl: candidate.claimUrl,
+        howToClaim: candidate.howToClaim,
+        sourceName: `Auto discovery · ${candidate.source}`,
+        sourceType: "CRON",
+        evergreen: false,
+        active: true,
+        tags: ["auto-discovery", "live", candidate.source, candidate.country.toLowerCase()],
+        updates: {
+          create: {
+            text: `Auto-published from pending queue (score ${check.score}).`,
           },
         },
-      }),
-      prisma.offerSubmission.update({
-        where: { id: submission.id },
-        data: {
-          status: "APPROVED",
-          autoScore: check.score,
-          notes: `Auto-published live as /signals/${slug}`,
-        },
-      }),
-    ]);
-    published += 1;
+      },
+      select: { id: true },
+    });
+
+    await prisma.offerSubmission.update({
+      where: { id: submission.id },
+      data: {
+        status: "APPROVED",
+        autoScore: check.score,
+        notes: `Auto-published live as /signals/${slug}`,
+      },
+    });
+
+    publishedIds.push(signal.id);
   }
 
-  return published;
+  return publishedIds;
 }
 
 export async function runDailyDiscovery(prisma: PrismaClient): Promise<DiscoveryStats> {
@@ -249,13 +252,18 @@ export async function runDailyDiscovery(prisma: PrismaClient): Promise<Discovery
     queued: 0,
     published: 0,
     skipped: 0,
+    emailsSent: 0,
     errors: [],
     sources: {},
   };
 
+  const publishedIds: string[] = [];
+
   // First: flush anything that was waiting in admin queue.
   try {
-    stats.published += await flushPendingAutoFinds(prisma);
+    const flushed = await flushPendingAutoFinds(prisma);
+    publishedIds.push(...flushed);
+    stats.published += flushed.length;
   } catch (err) {
     stats.errors.push(
       `flush: ${err instanceof Error ? err.message : "failed to flush pending"}`
@@ -297,7 +305,8 @@ export async function runDailyDiscovery(prisma: PrismaClient): Promise<Discovery
         continue;
       }
 
-      await publishCandidate(prisma, candidate, check.score);
+      const id = await publishCandidate(prisma, candidate, check.score);
+      publishedIds.push(id);
       stats.published += 1;
     } catch (err) {
       stats.errors.push(
@@ -311,6 +320,27 @@ export async function runDailyDiscovery(prisma: PrismaClient): Promise<Discovery
     await refreshMetrics(prisma);
   }
 
+  let notifyDetail: Record<string, unknown> = {};
+  if (publishedIds.length > 0) {
+    try {
+      const notify = await notifyMembersOfNewOffers(prisma, publishedIds);
+      stats.emailsSent = notify.emailsSent;
+      notifyDetail = {
+        membersChecked: notify.membersChecked,
+        emailsSent: notify.emailsSent,
+        emailsSkipped: notify.emailsSkipped,
+        notifyErrors: notify.errors,
+      };
+      if (notify.errors.length) {
+        stats.errors.push(...notify.errors.slice(0, 10));
+      }
+    } catch (err) {
+      stats.errors.push(
+        `notify: ${err instanceof Error ? err.message : "member emails failed"}`
+      );
+    }
+  }
+
   await prisma.discoveryRun.create({
     data: {
       kind: "discover",
@@ -318,14 +348,23 @@ export async function runDailyDiscovery(prisma: PrismaClient): Promise<Discovery
       queued: stats.queued,
       published: stats.published,
       skipped: stats.skipped,
-      detail: JSON.stringify({ sources: stats.sources, errors: stats.errors }),
+      detail: JSON.stringify({
+        sources: stats.sources,
+        errors: stats.errors,
+        emailsSent: stats.emailsSent,
+        ...notifyDetail,
+      }),
     },
   });
 
   if (stats.published > 0) {
     await prisma.activityEvent.create({
       data: {
-        text: `Auto discovery published ${stats.published} FREE deal${stats.published === 1 ? "" : "s"} live (${stats.found} scanned).`,
+        text: `Auto discovery published ${stats.published} FREE deal${stats.published === 1 ? "" : "s"} live${
+          stats.emailsSent
+            ? ` · emailed ${stats.emailsSent} member${stats.emailsSent === 1 ? "" : "s"}`
+            : ""
+        }.`,
       },
     });
   }
