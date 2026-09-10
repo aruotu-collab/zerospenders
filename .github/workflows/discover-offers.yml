@@ -2,8 +2,8 @@ name: Auto discover free deals
 
 on:
   schedule:
-    # Every 4 hours — backup if Vercel cron is limited
-    - cron: "15 */4 * * *"
+    # Once daily at 06:15 UTC — backup if Vercel cron misses
+    - cron: "15 6 * * *"
   workflow_dispatch:
 
 jobs:
