@@ -1,0 +1,28 @@
+name: Auto discover free deals
+
+on:
+  schedule:
+    # Every 4 hours — backup if Vercel cron is limited
+    - cron: "15 */4 * * *"
+  workflow_dispatch:
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger discovery cron
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          SITE_URL: ${{ vars.SITE_URL || 'https://zerospenders.com' }}
+        run: |
+          if [ -z "$CRON_SECRET" ]; then
+            echo "CRON_SECRET not set — calling endpoint may fail; attempting Vercel-style invoke..."
+          fi
+          CODE=$(curl -s -o /tmp/discover.json -w "%{http_code}" \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            "${SITE_URL}/api/cron/discover-offers")
+          echo "HTTP $CODE"
+          cat /tmp/discover.json
+          if [ "$CODE" != "200" ]; then
+            exit 1
+          fi
